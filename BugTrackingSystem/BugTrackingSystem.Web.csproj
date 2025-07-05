@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\BugTrackingSystem.Data\BugTrackingSystem.Data.csproj" />
     <ProjectReference Include="..\BugTrackingSystem.Models\BugTrackingSystem.Models.csproj" />
-    <ProjectReference Include="..\BugTrackingSystem.Services.Core\BugTrackingSystem.Services.Core.csproj" />
     <ProjectReference Include="..\BugTrackingSystem.Tests\BugTrackingSystem.Tests.csproj" />
     <ProjectReference Include="..\BugTrackingSystem.ViewModels\BugTrackingSystem.ViewModels.csproj" />
   </ItemGroup>
