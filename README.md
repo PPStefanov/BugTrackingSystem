@@ -37,5 +37,5 @@ A web application built with ASP.NET Core that allows users to report, track, an
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/bug-tracking-system.git
+   git clone https://github.com/PPstefanov/bug-tracking-system.git
 # BugTrackingSystem
