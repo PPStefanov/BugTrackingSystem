@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BugTrackingSystem.GCommon;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BugTrackingSystem.Models.Entities
 {
@@ -12,17 +9,22 @@ namespace BugTrackingSystem.Models.Entities
         public int Id { get; set; }
 
         [Required]
-        public string Text { get; set; }
+        [StringLength(
+            ValidationConstants.Comment.ContentMaxLength,
+            MinimumLength = ValidationConstants.Comment.ContentMinLength)]
+        public string Content { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Link to BugReport
-        public int BugReportId { get; set; }
-        public BugReport BugReport { get; set; }
+        public bool IsActive { get; set; } = true;
 
-        // Link to Author
         [Required]
         public string AuthorId { get; set; }
+
         public AppUser Author { get; set; }
+
+        public int BugReportId { get; set; }
+
+        public BugReport BugReport { get; set; }
     }
 }

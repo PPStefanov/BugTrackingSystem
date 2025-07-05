@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTrackingSystem.ViewModel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTrackingSystem.Tests", "BugTrackingSystem.Tests\BugTrackingSystem.Tests.csproj", "{8BC60AB2-F223-4E26-B7E9-6C082775539F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTrackingSystem.GCommon", "BugTrackingSystem.GCommon\BugTrackingSystem.GCommon.csproj", "{3D7E925F-2169-4075-8733-5DF1C2D31232}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{8BC60AB2-F223-4E26-B7E9-6C082775539F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BC60AB2-F223-4E26-B7E9-6C082775539F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BC60AB2-F223-4E26-B7E9-6C082775539F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D7E925F-2169-4075-8733-5DF1C2D31232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D7E925F-2169-4075-8733-5DF1C2D31232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D7E925F-2169-4075-8733-5DF1C2D31232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D7E925F-2169-4075-8733-5DF1C2D31232}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using BugTrackingSystem.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using BugTrackingSystem.Models.Entities;
+using System.Reflection;
 
 namespace BugTrackingSystem.Data
 {
@@ -20,18 +21,8 @@ namespace BugTrackingSystem.Data
         {
             base.OnModelCreating(builder);
 
-            // Optional: Fluent API configs (if needed)
-            builder.Entity<BugReport>()
-                .HasOne(b => b.Reporter)
-                .WithMany(u => u.ReportedBugs)
-                .HasForeignKey(b => b.ReporterId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            builder.Entity<Comment>()
-                .HasOne(c => c.Author)
-                .WithMany()
-                .HasForeignKey(c => c.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

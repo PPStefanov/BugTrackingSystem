@@ -1,10 +1,8 @@
-﻿using BugTrackingSystem.Models.Enums;
+﻿using BugTrackingSystem.GCommon;
+using BugTrackingSystem.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BugTrackingSystem.Models.Entities
 {
@@ -13,28 +11,32 @@ namespace BugTrackingSystem.Models.Entities
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(
+            ValidationConstants.BugReport.TitleMaxLength,
+            MinimumLength = ValidationConstants.BugReport.TitleMinLength)]
         public string Title { get; set; }
 
         [Required]
+        [StringLength(
+            ValidationConstants.BugReport.DescriptionMaxLength,
+            MinimumLength = ValidationConstants.BugReport.DescriptionMinLength)]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
 
-        // Enums for status and priority
+        public bool IsActive { get; set; } = true;
+
         public BugStatus Status { get; set; } = BugStatus.Open;
 
         public BugPriority Priority { get; set; } = BugPriority.Medium;
 
-        // Foreign Key to Reporter (User)
         [Required]
         public string ReporterId { get; set; }
 
         public AppUser Reporter { get; set; }
 
-        // Foreign Key to Project
         public int ProjectId { get; set; }
 
         public ApplicationName ApplicationName { get; set; }
