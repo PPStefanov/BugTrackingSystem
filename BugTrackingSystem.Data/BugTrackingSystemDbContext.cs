@@ -16,6 +16,10 @@ namespace BugTrackingSystem.Data
         public DbSet<ApplicationName> ApplicationName { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<BugPriorityEntity> BugPriorities { get; set; }
+        public DbSet<BugStatusEntity> BugStatuses { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -9,7 +9,8 @@ namespace BugTrackingSystem.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<BugTrackingSystemDbContext>();
             // Replace with your actual connection string for design time
-            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=BugTrackingSystem_072025;Trusted_Connection=True;MultipleActiveResultSets=true;encrypt=false");
+            //optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=BugTrackingSystem_072025;Trusted_Connection=True;MultipleActiveResultSets=true;encrypt=false");   HOME
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BugTrackingSystem_072025;Trusted_Connection=True;MultipleActiveResultSets=true;encrypt=false"); // WORK
 
             return new BugTrackingSystemDbContext(optionsBuilder.Options);
         }

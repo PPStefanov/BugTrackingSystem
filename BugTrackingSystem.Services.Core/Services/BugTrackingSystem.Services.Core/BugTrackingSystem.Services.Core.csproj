@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BugTrackingSystem.Models\BugTrackingSystem.Models.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BugTrackingSystem.Models\BugTrackingSystem.Models.csproj" />
-    <ProjectReference Include="..\BugTrackingSystem.Services.Core\BugTrackingSystem.Services.Core.csproj" />
+    <ProjectReference Include="..\BugTrackingSystem.Data\BugTrackingSystem.Data.csproj" />
+    <ProjectReference Include="..\BugTrackingSystem.Services.Core\Services\BugTrackingSystem.Services.Core\BugTrackingSystem.Services.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
