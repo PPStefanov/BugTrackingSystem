@@ -1,38 +1,34 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using BugTrackingSystem.Data;
 using BugTrackingSystem.Models.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
+var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-namespace BugTrackingSystem
+builder.Services.AddDbContext<BugTrackingSystemDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<BugTrackingSystemDbContext>();
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+})
+.AddEntityFrameworkStores<BugTrackingSystemDbContext>();
 
-            // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<BugTrackingSystemDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
-
-            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-            })
-                .AddEntityFrameworkStores<BugTrackingSystemDbContext>();
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();
-
-            var app = builder.Build();
+var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -60,6 +56,3 @@ namespace BugTrackingSystem
             app.MapRazorPages();
 
             app.Run();
-        }
-    }
-}

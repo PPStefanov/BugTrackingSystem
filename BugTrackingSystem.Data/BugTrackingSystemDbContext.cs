@@ -18,6 +18,7 @@ namespace BugTrackingSystem.Data
 
         public DbSet<BugPriorityEntity> BugPriorities { get; set; }
         public DbSet<BugStatusEntity> BugStatuses { get; set; }
+        public DbSet<Bug> Bugs { get; set; } // Assuming you have a Bug entity
 
 
 

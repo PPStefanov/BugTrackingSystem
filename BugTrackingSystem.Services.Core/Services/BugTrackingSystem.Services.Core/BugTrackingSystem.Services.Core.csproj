@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BugTrackingSystem.Data\BugTrackingSystem.Data.csproj" />
     <ProjectReference Include="..\..\..\BugTrackingSystem.Models\BugTrackingSystem.Models.csproj" />
   </ItemGroup>
 

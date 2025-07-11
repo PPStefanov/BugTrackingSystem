@@ -10,6 +10,10 @@ namespace BugTrackingSystem.Models.Entities
     {
         public int Id { get; set; }
 
+        // Foreign key to Bug entity
+        public int BugId { get; set; }
+        public Bug Bug { get; set; }
+
         [Required]
         [StringLength(
             ValidationConstants.BugReport.TitleMaxLength,
