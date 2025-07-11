@@ -46,5 +46,8 @@ namespace BugTrackingSystem.Models.Entities
         public ApplicationName ApplicationName { get; set; }
 
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+        public string AssignedToUserId { get; set; }
+        public AppUser AssignedToUser { get; set; }
     }
 }

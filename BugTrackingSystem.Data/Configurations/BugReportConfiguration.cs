@@ -29,6 +29,11 @@ namespace BugTrackingSystem.Data.Configurations
                 .HasForeignKey(b => b.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            entity.HasOne(b => b.AssignedToUser)
+                .WithMany()
+                .HasForeignKey(b => b.AssignedToUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasQueryFilter(b => b.IsActive); // Soft-delete filter
         }
     }
