@@ -26,7 +26,7 @@ namespace BugTrackingSystem.Data.Configurations
 
             entity.HasOne(b => b.ApplicationName)
                 .WithMany(a => a.BugReports)
-                .HasForeignKey(b => b.ProjectId)
+                .HasForeignKey(b => b.ApplicationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(b => b.AssignedToUser)

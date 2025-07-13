@@ -4,6 +4,7 @@ using BugTrackingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BugTrackingSystem.Data.Migrations
 {
     [DbContext(typeof(BugTrackingSystemDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250713100827_ChangePc")]
+    partial class ChangePc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,9 +169,6 @@ namespace BugTrackingSystem.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ApplicationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("AssignedToUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -190,7 +190,7 @@ namespace BugTrackingSystem.Data.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<int>("PriorityId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("ReporterId")
@@ -210,11 +210,11 @@ namespace BugTrackingSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationId");
-
                     b.HasIndex("AssignedToUserId");
 
                     b.HasIndex("BugId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("ReporterId");
 
@@ -409,12 +409,6 @@ namespace BugTrackingSystem.Data.Migrations
 
             modelBuilder.Entity("BugTrackingSystem.Models.Entities.BugReport", b =>
                 {
-                    b.HasOne("BugTrackingSystem.Models.Entities.ApplicationName", "ApplicationName")
-                        .WithMany("BugReports")
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("BugTrackingSystem.Models.Entities.AppUser", "AssignedToUser")
                         .WithMany()
                         .HasForeignKey("AssignedToUserId")
@@ -425,6 +419,12 @@ namespace BugTrackingSystem.Data.Migrations
                         .WithMany()
                         .HasForeignKey("BugId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BugTrackingSystem.Models.Entities.ApplicationName", "ApplicationName")
+                        .WithMany("BugReports")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BugTrackingSystem.Models.Entities.AppUser", "Reporter")

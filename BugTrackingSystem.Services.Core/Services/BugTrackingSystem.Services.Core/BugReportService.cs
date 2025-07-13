@@ -127,4 +127,32 @@ public class BugReportService : IBugReportService
         await _dbContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<List<BugPriorityEntity>> GetBugPrioritiesAsync()
+    {
+        return await _dbContext.BugPriorities.ToListAsync();
+    }
+
+    public async Task<List<ApplicationName>> GetApplicationsAsync()
+    {
+        return await _dbContext.ApplicationName.Where(a => a.IsActive).ToListAsync();
+    }
+
+    public async Task<List<BugStatusEntity>> GetBugStatusesAsync()
+    {
+        return await _dbContext.BugStatuses.ToListAsync();
+    }
+
+
+    public async Task<List<BugReport>> GetBugsByStatusAsync(string statusName)
+    {
+        return await _dbContext.BugReports
+            .Include(b => b.Status) // Include the related BugStatusEntity
+            .Include(b => b.Priority) // Include Priority for additional details
+            .Include(b => b.ApplicationName) // Include ApplicationName for additional details
+            .Include(b => b.AssignedToUser) // Include AssignedToUser for additional details
+            .Where(b => b.Status.Name == statusName && b.IsActive) // Filter by status name and active bugs
+            .ToListAsync();
+    }
+
 }

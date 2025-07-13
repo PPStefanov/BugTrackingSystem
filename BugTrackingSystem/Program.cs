@@ -67,6 +67,9 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await SeedData.SeedRolesAsync(services);
     await SeedData.SeedUsersAsync(services); // <--- ADD THIS LINE!
+    await SeedData.SeedPrioritiesAsync(services);
+    await SeedData.SeedApplicationsAsync(services); 
+    await SeedData.SeedStatusesAsync(services);
 }
 
 

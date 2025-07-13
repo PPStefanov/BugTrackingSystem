@@ -5,7 +5,7 @@ public class NoOpEmailSender : IEmailSender
 {
     public Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        // Do nothing
+        Console.WriteLine($"Email sent to {email}: {subject} - {htmlMessage}");
         return Task.CompletedTask;
     }
 }

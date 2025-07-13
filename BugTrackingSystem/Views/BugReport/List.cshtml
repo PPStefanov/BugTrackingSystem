@@ -1,0 +1,40 @@
+﻿@model List<BugTrackingSystem.ViewModels.BugReportListViewModel>
+
+<div class="container">
+    <h1>Bug Reports</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Application</th>
+                <th>Assigned To</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in Model)
+            {
+                <tr>
+                    <td>@ticket.Title</td>
+                    <td>@ticket.Status</td>
+                    <td>@ticket.Priority</td>
+                    <td>@ticket.Application</td>
+                    <td>@ticket.AssignedTo</td>
+                    <td>
+                        <a asp-action="Form" asp-route-id="@ticket.Id" class="btn btn-primary btn-sm">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

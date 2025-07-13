@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using BugTrackingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using BugTrackingSystem.ViewModels;
+
 
 namespace BugTrackingSystem.Controllers
 {
@@ -15,7 +17,13 @@ namespace BugTrackingSystem.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new IndexViewModel
+            {
+                WelcomeMessage = "Welcome to the Bug Tracking System!",
+                IsUserLoggedIn = User.Identity.IsAuthenticated
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
