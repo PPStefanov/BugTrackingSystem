@@ -10,8 +10,8 @@ namespace BugTrackingSystem.Models.Entities
 
         [Required]
         [StringLength(
-            ValidationConstants.Comment.ContentMaxLength,
-            MinimumLength = ValidationConstants.Comment.ContentMinLength)]
+            ValidationConstants.CommentValidation.ContentMaxLength,
+            MinimumLength = ValidationConstants.CommentValidation.ContentMinLength)]
         public string Content { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

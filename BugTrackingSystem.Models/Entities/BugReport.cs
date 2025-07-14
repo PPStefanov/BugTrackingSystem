@@ -8,20 +8,20 @@ namespace BugTrackingSystem.Models.Entities
     {
         public int Id { get; set; }
 
-        // Foreign key to Bug entity
-        public int BugId { get; set; }
-        public Bug Bug { get; set; }
+        //// Foreign key to Bug entity
+        //public int BugId { get; set; }
+        //public Bug Bug { get; set; }
 
         [Required]
         [StringLength(
-            ValidationConstants.BugReport.TitleMaxLength,
-            MinimumLength = ValidationConstants.BugReport.TitleMinLength)]
+            ValidationConstants.BugReportValidation.TitleMaxLength,
+            MinimumLength = ValidationConstants.BugReportValidation.TitleMinLength)]
         public string Title { get; set; }
 
         [Required]
         [StringLength(
-            ValidationConstants.BugReport.DescriptionMaxLength,
-            MinimumLength = ValidationConstants.BugReport.DescriptionMinLength)]
+            ValidationConstants.BugReportValidation.DescriptionMaxLength,
+            MinimumLength = ValidationConstants.BugReportValidation.DescriptionMinLength)]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

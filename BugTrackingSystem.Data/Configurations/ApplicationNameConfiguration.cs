@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using BugTrackingSystem.GCommon;
 using BugTrackingSystem.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BugTrackingSystem.Data.Configuration
 {
@@ -11,8 +12,8 @@ namespace BugTrackingSystem.Data.Configuration
             builder.HasKey(a => a.Id);
 
             builder.Property(a => a.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
+                //.HasMaxLength(ValidationConstants.ApplicationNameValidation.NameMinLength);
 
             builder.HasMany(a => a.BugReports)
                 .WithOne(b => b.ApplicationName)

@@ -2,7 +2,7 @@
 {
     public static class ValidationConstants
     {
-        public static class BugReport
+        public static class BugReportValidation
         {
             public const int TitleMinLength = 5;
             public const int TitleMaxLength = 100;
@@ -11,19 +11,19 @@
             public const int DescriptionMaxLength = 1000;
         }
 
-        public static class Comment
+        public static class CommentValidation
         {
             public const int ContentMinLength = 3;
             public const int ContentMaxLength = 500;
         }
 
-        public static class ApplicationName
+        public static class ApplicationNameValidation
         {
             public const int NameMinLength = 3;
             public const int NameMaxLength = 50;
         }
 
-        public static class AppUser
+        public static class AppUserValidation
         {
             public const int AppUserMinLength = 3;
             public const int AppUserMaxLength = 50;

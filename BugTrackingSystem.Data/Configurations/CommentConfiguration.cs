@@ -13,7 +13,7 @@ namespace BugTrackingSystem.Data.Configuration
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Content)
-                .HasMaxLength(ValidationConstants.Comment.ContentMaxLength)
+                .HasMaxLength(ValidationConstants.CommentValidation.ContentMaxLength)
                 .IsRequired();
 
             builder.HasOne(c => c.BugReport)

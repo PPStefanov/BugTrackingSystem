@@ -4,6 +4,7 @@ using BugTrackingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BugTrackingSystem.Data.Migrations
 {
     [DbContext(typeof(BugTrackingSystemDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714063731_SyncBugReportSchema")]
+    partial class SyncBugReportSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,6 +176,9 @@ namespace BugTrackingSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("BugId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -210,6 +216,8 @@ namespace BugTrackingSystem.Data.Migrations
                     b.HasIndex("ApplicationId");
 
                     b.HasIndex("AssignedToUserId");
+
+                    b.HasIndex("BugId");
 
                     b.HasIndex("ReporterId");
 
@@ -418,6 +426,12 @@ namespace BugTrackingSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("BugTrackingSystem.Models.Entities.Bug", "Bug")
+                        .WithMany()
+                        .HasForeignKey("BugId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BugTrackingSystem.Models.Entities.AppUser", "Reporter")
                         .WithMany("ReportedBugs")
                         .HasForeignKey("ReporterId")
@@ -433,6 +447,8 @@ namespace BugTrackingSystem.Data.Migrations
                     b.Navigation("ApplicationName");
 
                     b.Navigation("AssignedToUser");
+
+                    b.Navigation("Bug");
 
                     b.Navigation("Reporter");
 

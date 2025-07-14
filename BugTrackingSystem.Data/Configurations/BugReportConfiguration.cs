@@ -13,11 +13,11 @@ namespace BugTrackingSystem.Data.Configurations
 
             entity.Property(b => b.Title)
                 .IsRequired()
-                .HasMaxLength(ValidationConstants.BugReport.TitleMaxLength);
+                .HasMaxLength(ValidationConstants.BugReportValidation.TitleMaxLength);
 
             entity.Property(b => b.Description)
                 .IsRequired()
-                .HasMaxLength(ValidationConstants.BugReport.DescriptionMaxLength);
+                .HasMaxLength(ValidationConstants.BugReportValidation.DescriptionMaxLength);
 
             entity.HasOne(b => b.Reporter)
                 .WithMany(u => u.ReportedBugs)

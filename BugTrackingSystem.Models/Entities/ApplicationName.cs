@@ -10,8 +10,8 @@ namespace BugTrackingSystem.Models.Entities
 
         [Required]
         [StringLength(
-            ValidationConstants.ApplicationName.NameMaxLength,
-            MinimumLength = ValidationConstants.ApplicationName.NameMinLength)]
+            ValidationConstants.ApplicationNameValidation.NameMaxLength,
+            MinimumLength = ValidationConstants.ApplicationNameValidation.NameMinLength)]
         public string Name { get; set; }
 
         public bool IsActive { get; set; } = true;

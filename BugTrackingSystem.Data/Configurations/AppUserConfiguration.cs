@@ -10,7 +10,7 @@ namespace BugTrackingSystem.Data.Configurations
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.Property(u => u.UserName)
-                .HasMaxLength(ValidationConstants.AppUser.AppUserMaxLength);
+                .HasMaxLength(ValidationConstants.AppUserValidation.AppUserMaxLength);
 
             builder.HasMany(u => u.ReportedBugs)
                 .WithOne(b => b.Reporter)

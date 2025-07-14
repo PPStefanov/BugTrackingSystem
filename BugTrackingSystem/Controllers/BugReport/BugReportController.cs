@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using static BugTrackingSystem.GCommon.ValidationConstants;
 
 
 public class BugReportController : Controller
@@ -57,7 +58,7 @@ public class BugReportController : Controller
 
         var viewModel = tickets.Select(ticket => new BugReportListViewModel
         {
-            Id = ticket.Id,
+            Id = (int)ticket.Id,
             Title = ticket.Title,
             Status = ticket.Status.Name, // Use the Name property of BugStatusEntity
             Priority = ticket.Priority.ToString(), // Convert the BugPriority enum to a string
@@ -120,84 +121,141 @@ public class BugReportController : Controller
         }
     }
 
+    //[HttpPost]
+    //public async Task<IActionResult> Form(BugReportFormViewModel model)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+
+    //        foreach (var entry in ModelState)
+    //        {
+    //            foreach (var error in entry.Value.Errors)
+    //            {
+    //                Console.WriteLine($"{entry.Key}: {error.ErrorMessage}");
+    //            }
+    //        }
+
+    //        model.Priorities = await _bugReportService.GetBugPrioritiesAsync();
+    //        model.Applications = await _bugReportService.GetApplicationsAsync();
+    //        model.Statuses = await _bugReportService.GetBugStatusesAsync();
+    //        model.Users = await GetAssignableUsersAsync(); // Filter assignable users
+    //        return View(model);
+    //    }
+
+    //    var user = await _userManager.GetUserAsync(User);
+    //    var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
+    //    if (model.Id == null)
+    //    {
+    //        // Create operation
+    //        var bugReport = new BugReport
+    //        {
+    //            Title = model.Title,
+    //            Description = model.Description,
+    //            PriorityId = model.PriorityId,
+    //            ApplicationId = model.ApplicationId,
+    //            StatusId = 1, // New
+    //            ReporterId = user.Id,
+    //            AssignedToUserId = model.AssignedToUserId
+    //        };
+
+    //        await _bugReportService.CreateAsync(bugReport, user);
+
+    //        // Notify QA team
+    //        await _emailSender.SendEmailAsync("qa-team@example.com", "New Bug Report Created", $"A new bug report '{bugReport.Title}' has been created.");
+
+    //        TempData["SuccessMessage"] = "Bug report created successfully!";
+    //    }
+    //    else
+    //    {
+    //        // Edit operation
+    //        var bugReport = await _bugReportService.GetByIdAsync(model.Id.Value);
+    //        if (bugReport == null) return NotFound();
+
+    //        // Update properties
+    //        bugReport.Title = model.Title;
+    //        bugReport.Description = model.Description;
+    //        bugReport.PriorityId = model.PriorityId;
+    //        bugReport.ApplicationId = model.ApplicationId;
+
+    //        // Handle status change
+    //        if (model.StatusId != bugReport.StatusId)
+    //        {
+    //            bugReport.ChangeStatus(model.StatusId, userRole);
+
+    //            // Notify based on status
+    //            if (model.StatusId == 2) // In Test
+    //            {
+    //                await _emailSender.SendEmailAsync("qa-team@example.com", "Bug Report Assigned to QA", $"The bug report '{bugReport.Title}' is now in testing.");
+    //            }
+    //            else if (model.StatusId == 3) // In Development
+    //            {
+    //                var developer = await _userManager.FindByIdAsync(bugReport.AssignedToUserId);
+    //                await _emailSender.SendEmailAsync(developer.Email, "Bug Report Assigned to Developer", $"The bug report '{bugReport.Title}' is now in development.");
+    //            }
+    //            else if (model.StatusId == 4) // Ready for Regression
+    //            {
+    //                await _emailSender.SendEmailAsync("qa-team@example.com", "Bug Report Ready for Regression", $"The bug report '{bugReport.Title}' is ready for regression testing.");
+    //            }
+    //        }
+
+    //        await _bugReportService.UpdateAsync(bugReport, user);
+
+    //        TempData["SuccessMessage"] = "Bug report updated successfully!";
+    //    }
+
+    //    // Redirect to the List action
+    //    return RedirectToAction("List");
+    //}
+
     [HttpPost]
-    public async Task<IActionResult> Form(BugReportFormViewModel model)
+    public async Task<IActionResult> Form(BugReportCreateModel model)
     {
         if (!ModelState.IsValid)
         {
-
-            model.Priorities = await _bugReportService.GetBugPrioritiesAsync();
-            model.Applications = await _bugReportService.GetApplicationsAsync();
-            model.Statuses = await _bugReportService.GetBugStatusesAsync();
-            model.Users = await GetAssignableUsersAsync(); // Filter assignable users
-            return View(model);
-        }
-
-        var user = await _userManager.GetUserAsync(User);
-        var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-
-        if (model.Id == null)
-        {
-            // Create operation
-            var bugReport = new BugReport
+            // Repopulate dropdowns for the view model
+            var viewModel = new BugReportFormViewModel
             {
                 Title = model.Title,
                 Description = model.Description,
                 PriorityId = model.PriorityId,
                 ApplicationId = model.ApplicationId,
-                StatusId = 1, // New
-                ReporterId = user.Id,
-                AssignedToUserId = model.AssignedToUserId
+                StatusId = model.StatusId,
+                AssignedToUserId = model.AssignedToUserId,
+                Priorities = await _bugReportService.GetBugPrioritiesAsync(),
+                Applications = await _bugReportService.GetApplicationsAsync(),
+                Statuses = await _bugReportService.GetBugStatusesAsync(),
+                Users = await GetAssignableUsersAsync()
             };
-
-            await _bugReportService.CreateAsync(bugReport, user);
-
-            // Notify QA team
-            await _emailSender.SendEmailAsync("qa-team@example.com", "New Bug Report Created", $"A new bug report '{bugReport.Title}' has been created.");
-
-            TempData["SuccessMessage"] = "Bug report created successfully!";
+            return View(viewModel);
         }
-        else
+
+        var user = await _userManager.GetUserAsync(User);
+        var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
+        // Create operation
+        var bugReport = new BugReport
         {
-            // Edit operation
-            var bugReport = await _bugReportService.GetByIdAsync(model.Id.Value);
-            if (bugReport == null) return NotFound();
+            Title = model.Title,
+            Description = model.Description,
+            PriorityId = model.PriorityId,
+            ApplicationId = model.ApplicationId,
+            StatusId = model.StatusId,
+            ReporterId = user.Id,
+            AssignedToUserId = model.AssignedToUserId
+        };
 
-            // Update properties
-            bugReport.Title = model.Title;
-            bugReport.Description = model.Description;
-            bugReport.PriorityId = model.PriorityId;
-            bugReport.ApplicationId = model.ApplicationId;
+        await _bugReportService.CreateAsync(bugReport, user);
 
-            // Handle status change
-            if (model.StatusId != bugReport.StatusId)
-            {
-                bugReport.ChangeStatus(model.StatusId, userRole);
+        // Notify QA team
+        await _emailSender.SendEmailAsync("qa-team@example.com", "New Bug Report Created", $"A new bug report '{bugReport.Title}' has been created.");
 
-                // Notify based on status
-                if (model.StatusId == 2) // In Test
-                {
-                    await _emailSender.SendEmailAsync("qa-team@example.com", "Bug Report Assigned to QA", $"The bug report '{bugReport.Title}' is now in testing.");
-                }
-                else if (model.StatusId == 3) // In Development
-                {
-                    var developer = await _userManager.FindByIdAsync(bugReport.AssignedToUserId);
-                    await _emailSender.SendEmailAsync(developer.Email, "Bug Report Assigned to Developer", $"The bug report '{bugReport.Title}' is now in development.");
-                }
-                else if (model.StatusId == 4) // Ready for Regression
-                {
-                    await _emailSender.SendEmailAsync("qa-team@example.com", "Bug Report Ready for Regression", $"The bug report '{bugReport.Title}' is ready for regression testing.");
-                }
-            }
-
-            await _bugReportService.UpdateAsync(bugReport, user);
-
-            TempData["SuccessMessage"] = "Bug report updated successfully!";
-        }
+        TempData["SuccessMessage"] = "Bug report created successfully!";
 
         // Redirect to the List action
         return RedirectToAction("List");
     }
+
 
     private async Task<List<AppUser>> GetAssignableUsersAsync()
     {
