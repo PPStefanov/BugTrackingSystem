@@ -14,9 +14,7 @@ namespace BugTrackingSystem.Models.Entities
             MinimumLength = ValidationConstants.CommentValidation.ContentMinLength)]
         public string Content { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]
         public string AuthorId { get; set; }
@@ -26,5 +24,8 @@ namespace BugTrackingSystem.Models.Entities
         public int BugReportId { get; set; }
 
         public BugReport BugReport { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
     }
 }

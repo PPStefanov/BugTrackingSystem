@@ -34,6 +34,8 @@
         public int StatusId { get; set; } // Foreign key for BugStatusEntity
         [BindNever]
         public List<BugStatusEntity> Statuses { get; set; } // For dropdown
+
+        public bool CanEditStatus { get; set; } // Whether the user can edit the status
     }
 }
 

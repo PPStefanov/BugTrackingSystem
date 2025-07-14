@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BugTrackingSystem.Data\BugTrackingSystem.Data.csproj" />
     <ProjectReference Include="..\..\..\BugTrackingSystem.Models\BugTrackingSystem.Models.csproj" />
+    <ProjectReference Include="..\..\..\BugTrackingSystem.ViewModels\BugTrackingSystem.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

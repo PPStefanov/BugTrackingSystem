@@ -15,7 +15,7 @@ namespace BugTrackingSystem.Models.Entities
         [StringLength(2000)]
         public string Description { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public BugStatus Status { get; set; } = BugStatus.Open;
 

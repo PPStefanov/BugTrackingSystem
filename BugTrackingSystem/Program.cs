@@ -31,6 +31,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IBugReportService, BugReportService>();
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 var app = builder.Build();
 

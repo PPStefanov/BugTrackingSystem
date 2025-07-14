@@ -25,6 +25,7 @@
         <div class="form-group">
             <label asp-for="PriorityId"></label>
             <select asp-for="PriorityId" class="form-control">
+                <option value="">-- Select priority --</option>
                 @foreach (var priority in Model.Priorities)
                 {
                     <option value="@priority.Id">@priority.Name</option>
@@ -36,6 +37,7 @@
         <div class="form-group">
             <label asp-for="ApplicationId"></label>
             <select asp-for="ApplicationId" class="form-control">
+                <option value="">-- Select application --</option>
                 @foreach (var app in Model.Applications)
                 {
                     <option value="@app.Id">@app.Name</option>
@@ -45,37 +47,28 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="StatusId"></label>
+            <select asp-for="StatusId" class="form-control" disabled="@(Model.CanEditStatus ? null : "disabled")">
+                <option value="">-- Select status --</option>
+                @foreach (var status in Model.Statuses)
+                {
+                    <option value="@status.Id">@status.Name</option>
+                }
+            </select>
+            <input type="hidden" asp-for="StatusId" />
+            <span asp-validation-for="StatusId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
             <label asp-for="AssignedToUserId"></label>
             <select asp-for="AssignedToUserId" class="form-control">
-                <option value="">Unassigned</option>
+                <option value="">-- Select assignee --</option>
                 @foreach (var user in Model.Users)
                 {
                     <option value="@user.Id">@user.UserName</option>
                 }
             </select>
             <span asp-validation-for="AssignedToUserId" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="StatusId"></label>
-            @if (!User.IsInRole("User"))
-            {
-                <select asp-for="StatusId" class="form-control">
-                    @foreach (var status in Model.Statuses)
-                    {
-                        <option value="@status.Id">@status.Name</option>
-                    }
-                </select>
-            }
-            else
-            {
-                <select asp-for="StatusId" class="form-control" disabled>
-                    @foreach (var status in Model.Statuses)
-                    {
-                        <option value="@status.Id">@status.Name</option>
-                    }
-                </select>
-            }
-            <span asp-validation-for="StatusId" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>

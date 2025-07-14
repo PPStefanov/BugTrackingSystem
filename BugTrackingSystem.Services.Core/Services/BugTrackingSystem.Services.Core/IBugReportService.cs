@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BugTrackingSystem.Models.Entities;
+using BugTrackingSystem.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugTrackingSystem.Models.Entities;
 
 public interface IBugReportService
 {
@@ -25,4 +26,8 @@ public interface IBugReportService
 
 
     Task<List<BugReport>> GetBugsByStatusAsync(string statusName);
+
+    Task<List<BugReportListViewModel>> GetAllBugReportViewModelsAsync();
+
+    Task<bool> AutoAdvanceStatusToInTestIfQAAsync(BugReport bugReport, AppUser user, List<BugStatusEntity> statuses);
 }
