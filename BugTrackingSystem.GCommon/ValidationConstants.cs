@@ -27,6 +27,9 @@
         {
             public const int AppUserMinLength = 3;
             public const int AppUserMaxLength = 50;
+
+            public const int PasswordMinLength = 6;
+            public const int PasswordMaxLength = 100;
         }
     }
 }

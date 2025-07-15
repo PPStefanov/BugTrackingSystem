@@ -1,4 +1,4 @@
-﻿namespace BugTrackingSystem.ViewModels
+﻿namespace BugTrackingSystem.ViewModels.BugReport
 {
     using BugTrackingSystem.Models.Entities;
     using Microsoft.AspNetCore.Mvc.ModelBinding;

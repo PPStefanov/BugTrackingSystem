@@ -1,5 +1,5 @@
 ﻿using BugTrackingSystem.Models.Entities;
-using BugTrackingSystem.ViewModels;
+using BugTrackingSystem.ViewModels.BugReport;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

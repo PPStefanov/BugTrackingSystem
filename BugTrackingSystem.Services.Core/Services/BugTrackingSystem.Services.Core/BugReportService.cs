@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.Data;
 using Microsoft.AspNetCore.Identity;
-using BugTrackingSystem.ViewModels;
+using BugTrackingSystem.ViewModels.BugReport;
 
 public class BugReportService : IBugReportService
 {

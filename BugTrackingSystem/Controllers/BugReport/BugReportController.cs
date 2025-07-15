@@ -1,6 +1,6 @@
 ﻿using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.Models.Enums;
-using BugTrackingSystem.ViewModels;
+using BugTrackingSystem.ViewModels.BugReport;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
