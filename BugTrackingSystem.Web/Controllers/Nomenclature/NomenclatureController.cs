@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
-namespace BugTrackingSystem.Controllers.Nomenclature
+namespace BugTrackingSystem.Web.Controllers.Nomenclature
 {
     public class NomenclatureController : Controller
     {

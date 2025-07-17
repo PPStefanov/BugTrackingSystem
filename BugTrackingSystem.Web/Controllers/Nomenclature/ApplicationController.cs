@@ -1,4 +1,4 @@
-﻿using BugTrackingSystem.Models.Entities;
+using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BugTrackingSystem.Data;
 
-namespace BugTrackingSystem.Controllers.Nomenclature
+namespace BugTrackingSystem.Web.Controllers.Nomenclature
 {
     public class ApplicationController : Controller
     {

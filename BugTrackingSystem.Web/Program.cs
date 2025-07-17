@@ -3,7 +3,6 @@ using BugTrackingSystem.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using BugTrackingSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +26,18 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<BugTrackingSystemDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    // Add anti-forgery token validation globally
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+});
 builder.Services.AddRazorPages();
+
+// Add anti-forgery services
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+});
 builder.Services.AddScoped<IBugReportService, BugReportService>();
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 builder.Services.AddScoped<ICommentService, CommentService>();

@@ -1,4 +1,4 @@
-﻿using BugTrackingSystem.Models.Entities;
+using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BugTrackingSystem.Controllers.Nomenclature
+namespace BugTrackingSystem.Web.Controllers.Nomenclature
 {
     public class UserController : Controller
     {

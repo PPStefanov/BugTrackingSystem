@@ -1,5 +1,4 @@
 ﻿using BugTrackingSystem.GCommon;
-using BugTrackingSystem.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace BugTrackingSystem.Models.Entities
@@ -7,10 +6,6 @@ namespace BugTrackingSystem.Models.Entities
     public class BugReport
     {
         public int Id { get; set; }
-
-        //// Foreign key to Bug entity
-        //public int BugId { get; set; }
-        //public Bug Bug { get; set; }
 
         [Required]
         [StringLength(
@@ -34,7 +29,7 @@ namespace BugTrackingSystem.Models.Entities
         public BugStatusEntity Status { get; set; } // Navigation property
 
         public int PriorityId { get; set; }
-        public BugPriority Priority { get; set; } = BugPriority.Medium;
+        public BugPriorityEntity Priority { get; set; }
 
         [Required]
         public string ReporterId { get; set; }

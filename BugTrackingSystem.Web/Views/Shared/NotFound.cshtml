@@ -1,0 +1,175 @@
+@{
+    ViewData["Title"] = "Page Not Found";
+    Layout = "_Layout";
+}
+
+<div class="error-page">
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-search text-primary"></i>
+        </div>
+        <div class="error-content">
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-description">
+                Oops! The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
+            </p>
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>Go to Dashboard
+                </a>
+                <button onclick="history.back()" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Go Back
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Helpful Links -->
+    <div class="helpful-links">
+        <h5>You might be looking for:</h5>
+        <div class="link-grid">
+            <a href="/BugReport/List" class="help-link">
+                <i class="fas fa-bug"></i>
+                <span>Bug Reports</span>
+            </a>
+            <a href="/BugReport/Form" class="help-link">
+                <i class="fas fa-plus-circle"></i>
+                <span>Report New Bug</span>
+            </a>
+            <a href="/Applications/List" class="help-link">
+                <i class="fas fa-desktop"></i>
+                <span>Applications</span>
+            </a>
+            <a href="/User/List" class="help-link">
+                <i class="fas fa-users"></i>
+                <span>User Management</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin-bottom: 3rem;
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    opacity: 0.7;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin: 0;
+    line-height: 1;
+}
+
+.error-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--dark-gray);
+    margin: 1rem 0;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: var(--text-gray);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.helpful-links {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    max-width: 500px;
+    width: 100%;
+}
+
+.helpful-links h5 {
+    color: var(--dark-gray);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.help-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    text-decoration: none;
+    color: var(--text-gray);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+    border: 2px solid var(--medium-gray);
+}
+
+.help-link:hover {
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+    text-decoration: none;
+}
+
+.help-link i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.help-link span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@@media (max-width: 768px) {
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-actions .btn {
+        width: 200px;
+    }
+}
+</style>

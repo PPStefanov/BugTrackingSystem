@@ -1,21 +1,260 @@
+﻿@model BugTrackingSystem.ViewModels.IndexViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
 
+<!-- Welcome Section -->
+<div class="mb-4">
+    <h2 class="text-primary mb-2">@Model.WelcomeMessage</h2>
+    <p class="text-muted">Monitor and manage your bug tracking system from this central dashboard.</p>
+</div>
 
-@model BugTrackingSystem.ViewModels.IndexViewModel
+<!-- Dashboard Cards -->
+<div class="dashboard-cards">
+    <div class="dashboard-card blue">
+        <div class="card-header">
+            <h6 class="card-title">Total Bug Reports</h6>
+            <i class="fas fa-bug card-icon"></i>
+        </div>
+        <div class="card-value">245</div>
+        <p class="card-description">Active bug reports in the system</p>
+    </div>
 
+    <div class="dashboard-card green">
+        <div class="card-header">
+            <h6 class="card-title">Resolved Issues</h6>
+            <i class="fas fa-check-circle card-icon"></i>
+        </div>
+        <div class="card-value">189</div>
+        <p class="card-description">Successfully resolved this month</p>
+    </div>
 
+    <div class="dashboard-card orange">
+        <div class="card-header">
+            <h6 class="card-title">Pending Review</h6>
+            <i class="fas fa-clock card-icon"></i>
+        </div>
+        <div class="card-value">32</div>
+        <p class="card-description">Awaiting developer review</p>
+    </div>
 
-<div class="container text-center">
-    <h1>@Model.WelcomeMessage</h1>
-    <button class="btn btn-primary btn-lg mt-4" onclick="handleReportProblem()">Report a Problem</button>
+    <div class="dashboard-card primary">
+        <div class="card-header">
+            <h6 class="card-title">Active Users</h6>
+            <i class="fas fa-users card-icon"></i>
+        </div>
+        <div class="card-value">18</div>
+        <p class="card-description">Users active this week</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line text-primary me-2"></i>
+                    Recent Activity
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="badge badge-success me-3">RESOLVED</div>
+                    <div>
+                        <strong>Login Issue Fixed</strong>
+                        <small class="text-muted d-block">Application: Web Portal • 2 hours ago</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="badge badge-warning me-3">IN PROGRESS</div>
+                    <div>
+                        <strong>Database Connection Timeout</strong>
+                        <small class="text-muted d-block">Application: API Service • 4 hours ago</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="badge badge-danger me-3">HIGH PRIORITY</div>
+                    <div>
+                        <strong>Payment Processing Error</strong>
+                        <small class="text-muted d-block">Application: E-commerce • 6 hours ago</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="badge badge-info me-3">NEW</div>
+                    <div>
+                        <strong>UI Layout Issue on Mobile</strong>
+                        <small class="text-muted d-block">Application: Mobile App • 8 hours ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-rocket text-success me-2"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" onclick="handleReportProblem()">
+                        <i class="fas fa-plus me-2"></i>Report New Bug
+                    </button>
+                    <button class="btn btn-success" onclick="window.location.href='/BugReport/List'">
+                        <i class="fas fa-list me-2"></i>View All Reports
+                    </button>
+                    <button class="btn btn-warning" onclick="window.location.href='/Applications/List'">
+                        <i class="fas fa-desktop me-2"></i>Manage Applications
+                    </button>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <button class="btn btn-info" onclick="window.location.href='/User/List'">
+                            <i class="fas fa-users-cog me-2"></i>User Management
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie text-warning me-2"></i>
+                    Bug Status Distribution
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Open</span>
+                        <span class="badge badge-danger">56</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-danger" style="width: 23%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">In Progress</span>
+                        <span class="badge badge-warning">89</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-warning" style="width: 36%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Testing</span>
+                        <span class="badge badge-info">32</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: 13%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Resolved</span>
+                        <span class="badge badge-success">68</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 28%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Priority Breakdown
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Critical</span>
+                        <span class="badge badge-danger">12</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-danger" style="width: 15%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">High</span>
+                        <span class="badge badge-warning">34</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-warning" style="width: 42%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Medium</span>
+                        <span class="badge badge-info">67</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: 83%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Low</span>
+                        <span class="badge badge-secondary">23</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-secondary" style="width: 28%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     function handleReportProblem() {
         const isLoggedIn = @Model.IsUserLoggedIn.ToString().ToLower();
         if (isLoggedIn) {
-            window.location.href = '/BugReport/Create';
+            window.location.href = '/BugReport/Form';
         } else {
             window.location.href = '/Identity/Account/Login';
         }
     }
-</script>   
+
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate dashboard cards on load
+        const cards = document.querySelectorAll('.dashboard-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Add click effects to cards
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+    });
+</script>

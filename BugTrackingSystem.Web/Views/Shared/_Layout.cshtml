@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bug Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BugTrackingSystem.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <div class="brand-content">
+                    <span class="brand-text">BugTracker</span>
+                    <span class="brand-subtitle">Pro</span>
+                </div>
+            </div>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                    <div class="nav-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="BugReport" asp-action="List">
+                    <div class="nav-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <span class="nav-text">Bug Reports</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="BugReport" asp-action="Form">
+                    <div class="nav-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <span class="nav-text">New Bug</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Applications" asp-action="List">
+                    <div class="nav-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <span class="nav-text">Applications</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="User" asp-action="List">
+                    <div class="nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="nav-text">Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Nomenclature" asp-action="Index">
+                    <div class="nav-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">@User.Identity?.Name</span>
+                        <span class="user-role">@(User.IsInRole("Administrator") ? "Administrator" : "User")</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">Guest</span>
+                        <span class="user-role">Not logged in</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title-section">
+                    <h1 class="page-title">@ViewData["Title"]</h1>
+                    <span class="page-subtitle">Bug Tracking System</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-actions">
+                    <button class="header-btn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="header-btn" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                <partial name="_LoginPartial" />
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="page-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - BugTrackingSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
