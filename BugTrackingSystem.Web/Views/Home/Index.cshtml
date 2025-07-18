@@ -1,6 +1,86 @@
-﻿@model BugTrackingSystem.ViewModels.IndexViewModel
+﻿@model BugTrackingSystem.ViewModels.Dashboard.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
+}
+
+@functions {
+    private string GetStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "new" => "info",
+            "in test" => "warning",
+            "in development" => "primary",
+            "ready for regression" => "info",
+            "closed" => "success",
+            _ => "secondary"
+        };
+    }
+
+    private string GetProgressBarClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "new" => "info",
+            "in test" => "warning",
+            "in development" => "primary",
+            "ready for regression" => "info",
+            "closed" => "success",
+            _ => "secondary"
+        };
+    }
+
+    private string GetPriorityBadgeClass(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "critical" => "danger",
+            "high" => "warning",
+            "medium" => "info",
+            "low" => "secondary",
+            _ => "secondary"
+        };
+    }
+
+    private string GetPriorityProgressClass(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "critical" => "danger",
+            "high" => "warning",
+            "medium" => "info",
+            "low" => "secondary",
+            _ => "secondary"
+        };
+    }
+
+    private int GetPriorityOrder(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "critical" => 4,
+            "high" => 3,
+            "medium" => 2,
+            "low" => 1,
+            _ => 0
+        };
+    }
+
+    private string GetTimeAgo(DateTime timestamp)
+    {
+        var timeSpan = DateTime.UtcNow - timestamp;
+        
+        if (timeSpan.TotalMinutes < 1)
+            return "just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes} minutes ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours} hours ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays} days ago";
+        
+        return timestamp.ToString("MMM dd, yyyy");
+    }
 }
 
 <!-- Welcome Section -->
@@ -16,8 +96,15 @@
             <h6 class="card-title">Total Bug Reports</h6>
             <i class="fas fa-bug card-icon"></i>
         </div>
-        <div class="card-value">245</div>
+        <div class="card-value">@Model.Stats.TotalBugReports</div>
         <p class="card-description">Active bug reports in the system</p>
+        @if (Model.Stats.TotalBugReportsChange != 0)
+        {
+            <small class="text-muted">
+                <i class="fas fa-arrow-@(Model.Stats.TotalBugReportsChange > 0 ? "up text-success" : "down text-danger")"></i>
+                @Math.Abs(Model.Stats.TotalBugReportsChange).ToString("F1")% from last month
+            </small>
+        }
     </div>
 
     <div class="dashboard-card green">
@@ -25,8 +112,15 @@
             <h6 class="card-title">Resolved Issues</h6>
             <i class="fas fa-check-circle card-icon"></i>
         </div>
-        <div class="card-value">189</div>
+        <div class="card-value">@Model.Stats.ResolvedIssues</div>
         <p class="card-description">Successfully resolved this month</p>
+        @if (Model.Stats.ResolvedIssuesChange != 0)
+        {
+            <small class="text-muted">
+                <i class="fas fa-arrow-@(Model.Stats.ResolvedIssuesChange > 0 ? "up text-success" : "down text-danger")"></i>
+                @Math.Abs(Model.Stats.ResolvedIssuesChange).ToString("F1")% from last month
+            </small>
+        }
     </div>
 
     <div class="dashboard-card orange">
@@ -34,7 +128,7 @@
             <h6 class="card-title">Pending Review</h6>
             <i class="fas fa-clock card-icon"></i>
         </div>
-        <div class="card-value">32</div>
+        <div class="card-value">@Model.Stats.PendingReview</div>
         <p class="card-description">Awaiting developer review</p>
     </div>
 
@@ -43,8 +137,47 @@
             <h6 class="card-title">Active Users</h6>
             <i class="fas fa-users card-icon"></i>
         </div>
-        <div class="card-value">18</div>
+        <div class="card-value">@Model.Stats.ActiveUsers</div>
         <p class="card-description">Users active this week</p>
+    </div>
+</div>
+
+<!-- Additional Stats Row -->
+<div class="dashboard-cards">
+    <div class="dashboard-card orange">
+        <div class="card-header">
+            <h6 class="card-title">New This Week</h6>
+            <i class="fas fa-plus-circle card-icon"></i>
+        </div>
+        <div class="card-value">@Model.Stats.NewThisWeek</div>
+        <p class="card-description">Recently reported issues</p>
+    </div>
+
+    <div class="dashboard-card blue">
+        <div class="card-header">
+            <h6 class="card-title">In Progress</h6>
+            <i class="fas fa-cogs card-icon"></i>
+        </div>
+        <div class="card-value">@Model.Stats.InProgress</div>
+        <p class="card-description">Currently being developed</p>
+    </div>
+
+    <div class="dashboard-card primary">
+        <div class="card-header">
+            <h6 class="card-title">High Priority</h6>
+            <i class="fas fa-exclamation-triangle card-icon"></i>
+        </div>
+        <div class="card-value">@Model.Stats.HighPriority</div>
+        <p class="card-description">Urgent issues requiring attention</p>
+    </div>
+
+    <div class="dashboard-card orange">
+        <div class="card-header">
+            <h6 class="card-title">Overdue Issues</h6>
+            <i class="fas fa-calendar-times card-icon"></i>
+        </div>
+        <div class="card-value">@Model.Stats.OverdueIssues</div>
+        <p class="card-description">Issues older than 30 days</p>
     </div>
 </div>
 
@@ -59,34 +192,31 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="badge badge-success me-3">RESOLVED</div>
-                    <div>
-                        <strong>Login Issue Fixed</strong>
-                        <small class="text-muted d-block">Application: Web Portal • 2 hours ago</small>
+                @if (Model.RecentActivity.Any())
+                {
+                    @foreach (var activity in Model.RecentActivity)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="badge badge-@GetStatusBadgeClass(activity.Status) me-3">@activity.Status.ToUpper()</div>
+                            <div class="flex-grow-1">
+                                <strong>@activity.Title</strong>
+                                <small class="text-muted d-block">
+                                    @activity.ActivityType by @activity.UserName • @GetTimeAgo(activity.Timestamp)
+                                </small>
+                            </div>
+                            <a href="/BugReport/Details/@activity.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                        <p>No recent activity to display</p>
                     </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="badge badge-warning me-3">IN PROGRESS</div>
-                    <div>
-                        <strong>Database Connection Timeout</strong>
-                        <small class="text-muted d-block">Application: API Service • 4 hours ago</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="badge badge-danger me-3">HIGH PRIORITY</div>
-                    <div>
-                        <strong>Payment Processing Error</strong>
-                        <small class="text-muted d-block">Application: E-commerce • 6 hours ago</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="badge badge-info me-3">NEW</div>
-                    <div>
-                        <strong>UI Layout Issue on Mobile</strong>
-                        <small class="text-muted d-block">Application: Mobile App • 8 hours ago</small>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -133,42 +263,33 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">Open</span>
-                        <span class="badge badge-danger">56</span>
+                @if (Model.BugsByStatus.Any())
+                {
+                    var totalBugs = Model.BugsByStatus.Values.Sum();
+                    foreach (var status in Model.BugsByStatus)
+                    {
+                        var percentage = totalBugs > 0 ? (status.Value * 100.0 / totalBugs) : 0;
+                        var badgeClass = GetStatusBadgeClass(status.Key);
+                        var progressClass = GetProgressBarClass(status.Key);
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted">@status.Key</span>
+                                <span class="badge badge-@badgeClass">@status.Value</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 8px;">
+                                <div class="progress-bar bg-@progressClass" style="width: @percentage.ToString("F1")%"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-chart-pie fa-2x mb-2"></i>
+                        <p>No status data available</p>
                     </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-danger" style="width: 23%"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">In Progress</span>
-                        <span class="badge badge-warning">89</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-warning" style="width: 36%"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">Testing</span>
-                        <span class="badge badge-info">32</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-info" style="width: 13%"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">Resolved</span>
-                        <span class="badge badge-success">68</span>
-                    </div>
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar bg-success" style="width: 28%"></div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -182,42 +303,33 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">Critical</span>
-                        <span class="badge badge-danger">12</span>
+                @if (Model.BugsByPriority.Any())
+                {
+                    var totalPriorityBugs = Model.BugsByPriority.Values.Sum();
+                    foreach (var priority in Model.BugsByPriority.OrderByDescending(p => GetPriorityOrder(p.Key)))
+                    {
+                        var percentage = totalPriorityBugs > 0 ? (priority.Value * 100.0 / totalPriorityBugs) : 0;
+                        var badgeClass = GetPriorityBadgeClass(priority.Key);
+                        var progressClass = GetPriorityProgressClass(priority.Key);
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted">@priority.Key</span>
+                                <span class="badge badge-@badgeClass">@priority.Value</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 8px;">
+                                <div class="progress-bar bg-@progressClass" style="width: @percentage.ToString("F1")%"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                        <p>No priority data available</p>
                     </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-danger" style="width: 15%"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">High</span>
-                        <span class="badge badge-warning">34</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-warning" style="width: 42%"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">Medium</span>
-                        <span class="badge badge-info">67</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-info" style="width: 83%"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted">Low</span>
-                        <span class="badge badge-secondary">23</span>
-                    </div>
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar bg-secondary" style="width: 28%"></div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>

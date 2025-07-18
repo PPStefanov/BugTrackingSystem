@@ -1,5 +1,6 @@
 using BugTrackingSystem.Data;
 using BugTrackingSystem.Models.Entities;
+using BugTrackingSystem.Services.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,8 @@ builder.Services.AddAntiforgery(options =>
 builder.Services.AddScoped<IBugReportService, BugReportService>();
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 
