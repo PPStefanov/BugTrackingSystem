@@ -1,0 +1,94 @@
+@model List<BugTrackingSystem.Models.Entities.Notification>
+
+<div class="notification-dropdown">
+    <div class="notification-header">
+        <h6 class="mb-0">
+            <i class="fas fa-bell me-2"></i>Notifications
+        </h6>
+        @if (Model.Any(n => !n.IsRead))
+        {
+            <button class="btn btn-link btn-sm p-0" onclick="markAllAsRead()">
+                <small>Mark all as read</small>
+            </button>
+        }
+    </div>
+    
+    <div class="notification-body">
+        @if (Model.Any())
+        {
+            @foreach (var notification in Model)
+            {
+                <div class="notification-item @(notification.IsRead ? "read" : "unread")" data-id="@notification.Id">
+                    <div class="notification-content">
+                        <div class="notification-icon">
+                            @switch (notification.Type)
+                            {
+                                case BugTrackingSystem.Models.Entities.NotificationType.BugReportCreated:
+                                    <i class="fas fa-plus-circle text-success"></i>
+                                    break;
+                                case BugTrackingSystem.Models.Entities.NotificationType.BugReportStatusChanged:
+                                    <i class="fas fa-exchange-alt text-warning"></i>
+                                    break;
+                                case BugTrackingSystem.Models.Entities.NotificationType.BugReportAssigned:
+                                    <i class="fas fa-user-tag text-info"></i>
+                                    break;
+                                case BugTrackingSystem.Models.Entities.NotificationType.CommentAdded:
+                                    <i class="fas fa-comment text-primary"></i>
+                                    break;
+                                case BugTrackingSystem.Models.Entities.NotificationType.BugReportUpdated:
+                                    <i class="fas fa-edit text-secondary"></i>
+                                    break;
+                            }
+                        </div>
+                        <div class="notification-text">
+                            <div class="notification-title">@notification.Title</div>
+                            <div class="notification-message">@notification.Message</div>
+                            <div class="notification-time">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    @notification.CreatedAt.ToString("MMM dd, HH:mm")
+                                </small>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            @if (!notification.IsRead)
+                            {
+                                <button class="btn btn-sm btn-outline-primary" onclick="markAsRead(@notification.Id)">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            }
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteNotification(@notification.Id)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    @if (notification.BugReportId.HasValue)
+                    {
+                        <div class="notification-link">
+                            <a href="/BugReport/Details/@notification.BugReportId" class="btn btn-sm btn-link">
+                                <i class="fas fa-external-link-alt me-1"></i>View Bug Report
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-notifications">
+                <div class="text-center py-4">
+                    <i class="fas fa-bell-slash text-muted mb-2" style="font-size: 2rem;"></i>
+                    <p class="text-muted mb-0">No notifications yet</p>
+                    <small class="text-muted">You'll see updates about your bug reports here</small>
+                </div>
+            </div>
+        }
+    </div>
+    
+    @if (Model.Count >= 10)
+    {
+        <div class="notification-footer">
+            <a href="#" class="btn btn-link btn-sm">View all notifications</a>
+        </div>
+    }
+</div>

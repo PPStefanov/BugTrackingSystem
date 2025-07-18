@@ -17,6 +17,7 @@
         [Required]
         public int ApplicationId { get; set; }
         public string AssignedToUserId { get; set; }
+        public string? DeveloperId { get; set; }
         [Required]
         public int StatusId { get; set; }
     }

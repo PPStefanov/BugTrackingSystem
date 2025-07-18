@@ -1,5 +1,6 @@
 using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using BugTrackingSystem.Data;
 
 namespace BugTrackingSystem.Web.Controllers.Nomenclature
 {
+    [Authorize]
     public class ApplicationController : Controller
     {
         private readonly BugTrackingSystemDbContext _dbContext;

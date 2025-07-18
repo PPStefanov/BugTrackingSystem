@@ -10,41 +10,47 @@
         </div>
     }
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Priority</th>
-                <th>Application</th>
-                <th>Assigned To</th>
-                <th>Reporter</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ticket in Model)
-            {
-                <tr>
-                    <td>@ticket.Title</td>
-                    <td>@ticket.Status</td>
-                    <td>@ticket.Priority</td>
-                    <td>@ticket.Application</td>
-                    <td>@ticket.AssignedTo</td>
-                    <td>@ticket.Reporter</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-info btn-sm">View</a>
-                        @if (ticket.CanEdit)
-                        {
-                            <a asp-action="Form" asp-route-id="@ticket.Id" class="btn btn-primary btn-sm">Edit</a>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary btn-sm" disabled>Edit</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Application</th>
+                        <th>Assigned To</th>
+                        <th>Reporter</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ticket in Model)
+                    {
+                        <tr>
+                            <td title="@ticket.Title">@ticket.Title</td>
+                            <td><span class="badge badge-info">@ticket.Status</span></td>
+                            <td><span class="badge badge-secondary">@ticket.Priority</span></td>
+                            <td>@ticket.Application</td>
+                            <td>@ticket.AssignedTo</td>
+                            <td>@ticket.Reporter</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-success">View</a>
+                                    @if (ticket.CanEdit)
+                                    {
+                                        <a asp-action="Form" asp-route-id="@ticket.Id" class="btn btn-primary">Edit</a>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary" disabled>Edit</button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

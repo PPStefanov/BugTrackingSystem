@@ -61,9 +61,9 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="AssignedToUserId"></label>
+            <label asp-for="AssignedToUserId">Assigned QA</label>
             <select asp-for="AssignedToUserId" class="form-control">
-                <option value="">-- Select assignee --</option>
+                <option value="">-- Select QA assignee --</option>
                 @foreach (var user in Model.Users)
                 {
                     <option value="@user.Id">@user.UserName</option>
@@ -72,6 +72,98 @@
             <span asp-validation-for="AssignedToUserId" class="text-danger"></span>
         </div>
 
+        @if (Model.ShowDeveloperDropdown)
+        {
+            <div class="form-group" id="developerDropdown">
+                <label asp-for="DeveloperId">Assigned Developer</label>
+                <select asp-for="DeveloperId" class="form-control">
+                    <option value="">-- Select developer --</option>
+                    @foreach (var developer in Model.Developers)
+                    {
+                        <option value="@developer.Id">@developer.UserName</option>
+                    }
+                </select>
+                <span asp-validation-for="DeveloperId" class="text-danger"></span>
+                <small class="form-text text-muted">
+                    Select a developer when moving to "In Development" status.
+                </small>
+            </div>
+        }
+
         <button type="submit" class="btn btn-primary">Submit</button>
+        
+        @if (Model.Id != null)
+        {
+            @await Html.PartialAsync("_AdminSubscription", Model.Id.Value)
+        }
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.querySelector('select[name="StatusId"]');
+    const developerDropdown = document.getElementById('developerDropdown');
+    
+    if (statusSelect && developerDropdown) {
+        // Function to toggle developer dropdown visibility
+        function toggleDeveloperDropdown() {
+            const selectedOption = statusSelect.options[statusSelect.selectedIndex];
+            const statusName = selectedOption.text;
+            
+            if (statusName === 'In Development') {
+                developerDropdown.style.display = 'block';
+                // Make developer selection required when status is "In Development"
+                const developerSelect = developerDropdown.querySelector('select');
+                if (developerSelect) {
+                    developerSelect.setAttribute('required', 'required');
+                }
+            } else {
+                developerDropdown.style.display = 'none';
+                // Remove required attribute when not needed
+                const developerSelect = developerDropdown.querySelector('select');
+                if (developerSelect) {
+                    developerSelect.removeAttribute('required');
+                    developerSelect.value = ''; // Clear selection
+                }
+            }
+        }
+        
+        // Initial check
+        toggleDeveloperDropdown();
+        
+        // Listen for status changes
+        statusSelect.addEventListener('change', toggleDeveloperDropdown);
+    }
+});
+</script>
+
+<style>
+#developerDropdown {
+    border-left: 3px solid var(--accent-orange);
+    padding-left: 15px;
+    margin-left: 10px;
+    background: rgba(237, 137, 54, 0.05);
+    border-radius: 4px;
+    padding: 15px;
+}
+
+#developerDropdown label {
+    color: var(--accent-orange);
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--dark-gray);
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25);
+}
+</style>

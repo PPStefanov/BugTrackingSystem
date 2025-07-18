@@ -1,5 +1,6 @@
 using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BugTrackingSystem.Web.Controllers.Nomenclature
 {
+    [Authorize(Roles = "Administrator")]
     public class UserController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

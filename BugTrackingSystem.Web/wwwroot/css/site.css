@@ -218,26 +218,58 @@ body {
   opacity: 0;
   transform: translateX(-10px);
   transition: all 0.2s ease;
+  position: absolute;
+  left: -9999px;
 }
 
 .sidebar.collapsed .nav-link {
   justify-content: center;
-  padding: 14px 12px;
+  padding: 12px;
   margin: 0 12px 4px 12px;
+  position: relative;
+  background: transparent !important;
 }
 
 .sidebar.collapsed .nav-icon {
   margin-right: 0;
   width: 40px;
   height: 40px;
+  position: relative;
+  transform: none;
+  background: transparent !important;
 }
 
 .sidebar.collapsed .nav-icon i {
   font-size: 1.2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .sidebar.collapsed .nav-link::before {
   display: none;
+}
+
+.sidebar.collapsed .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar.collapsed .nav-link.active {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.sidebar.collapsed .nav-link.active .nav-icon {
+  background: transparent !important;
+}
+
+/* Fix for collapsed sidebar brand content */
+.sidebar.collapsed .brand-content {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.2s ease;
+  position: absolute;
+  left: -9999px;
 }
 
 /* Main Content Styles */
@@ -245,10 +277,15 @@ body {
   margin-left: var(--sidebar-width);
   transition: all 0.3s ease;
   min-height: 100vh;
+  width: calc(100% - var(--sidebar-width));
+  max-width: calc(100% - var(--sidebar-width));
+  overflow-x: auto;
 }
 
 .main-content.expanded {
   margin-left: var(--sidebar-collapsed-width);
+  width: calc(100% - var(--sidebar-collapsed-width));
+  max-width: calc(100% - var(--sidebar-collapsed-width));
 }
 
 /* Top Header */
@@ -291,6 +328,8 @@ body {
   position: relative;
   overflow: hidden;
 }
+
+/* Toggle button - always hamburger menu */
 
 .sidebar-toggle-btn::before {
   content: '';
@@ -370,6 +409,30 @@ body {
   gap: 10px;
 }
 
+/* User Section Styles */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-greeting {
+  font-size: 0.9rem;
+  color: var(--dark-gray);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .header-btn {
   background: none;
   border: none;
@@ -414,10 +477,386 @@ body {
   box-shadow: 0 2px 4px rgba(237, 137, 54, 0.3);
 }
 
+/* Notification System Styles */
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-dropdown-container {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 380px;
+  max-height: 500px;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-heavy);
+  border: 1px solid var(--medium-gray);
+  z-index: 1000;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.notification-dropdown-container.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.notification-dropdown {
+  max-height: 500px;
+  overflow-y: auto;
+  border-radius: var(--border-radius);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--medium-gray);
+  background: var(--light-gray);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.notification-header h6 {
+  color: var(--dark-gray);
+  font-weight: 600;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.notification-count {
+  background: var(--accent-orange);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+.notification-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--medium-gray);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.unread {
+  background: rgba(30, 58, 138, 0.03);
+  border-left: 3px solid var(--primary-blue);
+}
+
+.notification-item.unread::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-orange);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--white);
+}
+
+.notification-item:hover {
+  background: var(--light-gray);
+  transform: translateX(2px);
+}
+
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notification-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-top: 2px;
+  font-size: 1rem;
+}
+
+.notification-icon.bug {
+  background: rgba(229, 62, 62, 0.1);
+  color: #e53e3e;
+}
+
+.notification-icon.comment {
+  background: rgba(66, 153, 225, 0.1);
+  color: var(--light-blue);
+}
+
+.notification-icon.assignment {
+  background: rgba(237, 137, 54, 0.1);
+  color: var(--accent-orange);
+}
+
+.notification-icon.status {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--accent-green);
+}
+
+.notification-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-weight: 600;
+  color: var(--dark-gray);
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notification-message {
+  color: var(--text-gray);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notification-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  font-weight: 500;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.notification-item:hover .notification-actions {
+  opacity: 1;
+}
+
+.notification-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-gray);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.notification-action-btn:hover {
+  background: var(--medium-gray);
+  color: var(--dark-gray);
+}
+
+.notification-action-btn.mark-read {
+  color: var(--accent-green);
+}
+
+.notification-action-btn.mark-read:hover {
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.notification-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 6px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.notification-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.notification-footer {
+  padding: 12px 20px;
+  text-align: center;
+  border-top: 1px solid var(--medium-gray);
+  background: var(--light-gray);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.notification-footer-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.notification-footer-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.no-notifications {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-gray);
+}
+
+.no-notifications i {
+  font-size: 2.5rem;
+  color: var(--medium-gray);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.no-notifications p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Notification dropdown scrollbar */
+.notification-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-body::-webkit-scrollbar-track {
+  background: var(--light-gray);
+}
+
+.notification-body::-webkit-scrollbar-thumb {
+  background: var(--medium-gray);
+  border-radius: 3px;
+}
+
+.notification-body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-gray);
+}
+
+/* Mobile responsive notifications */
+@media (max-width: 768px) {
+  .notification-dropdown-container {
+    width: 320px;
+    right: -20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-dropdown-container {
+    width: calc(100vw - 40px);
+    right: -10px;
+    left: 10px;
+  }
+  
+  .notification-item {
+    padding: 12px 16px;
+  }
+  
+  .notification-header {
+    padding: 12px 16px;
+  }
+  
+  .notification-footer {
+    padding: 10px 16px;
+  }
+}
+
+/* Notification loading state */
+.notification-loading {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-gray);
+}
+
+.notification-loading i {
+  font-size: 1.5rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Notification error state */
+.notification-error {
+  padding: 20px;
+  text-align: center;
+  color: #e53e3e;
+}
+
+.notification-error i {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Mark all as read button */
+.mark-all-read-btn {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.mark-all-read-btn:hover {
+  background: rgba(30, 58, 138, 0.1);
+  color: var(--secondary-blue);
+}
+
 /* Page Content */
 .page-content {
-  padding: 30px;
+  padding: 20px;
   min-height: calc(100vh - var(--header-height) - 60px);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Container adjustments */
+.container {
+  max-width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 /* Footer */
@@ -666,47 +1105,89 @@ body {
   margin: 0;
 }
 
-/* Buttons */
+/* Buttons - Consistent Design */
+.btn {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  height: 36px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 12px 24px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-light);
+  color: white;
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
   background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+  color: white;
 }
 
 .btn-success {
   background: linear-gradient(135deg, var(--accent-green), #2f855a);
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 12px 24px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-light);
+  color: white;
 }
 
 .btn-success:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
   background: linear-gradient(135deg, #2f855a, var(--accent-green));
+  color: white;
 }
 
 .btn-warning {
   background: linear-gradient(135deg, var(--accent-orange), #dd6b20);
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 12px 24px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-light);
+  color: white;
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, #dd6b20, var(--accent-orange));
+  color: white;
+}
+
+/* Action Buttons in Tables - Consistent Layout */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  min-width: 130px;
+}
+
+.action-buttons .btn {
+  flex-shrink: 0;
+  min-width: 60px;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  height: 32px;
+}
+
+/* Ensure buttons don't move when sidebar collapses */
+.table td {
+  white-space: nowrap;
+}
+
+.table .action-buttons {
+  min-width: 140px;
+}
 }
 
 .btn-warning:hover {
@@ -1057,4 +1538,475 @@ body {
   .sidebar-nav .nav-link.active {
     border-color: currentColor;
   }
+}/
+* Additional fixes for button consistency and layout stability */
+
+/* Responsive table layout with horizontal scrolling */
+.table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 1000px; /* Set minimum width to ensure proper column spacing */
+}
+
+.table th:last-child,
+.table td:last-child {
+  width: 140px;
+  min-width: 140px;
+  text-align: center;
+}
+
+/* Table wrapper for horizontal scrolling */
+.table-responsive {
+  overflow-x: auto;
+  overflow-y: visible;
+  margin-bottom: 1rem;
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+}
+
+.table-responsive .table {
+  margin-bottom: 0;
+  border: none;
+}
+
+/* Custom scrollbar styling */
+.table-responsive::-webkit-scrollbar {
+  height: 12px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: var(--light-gray);
+  border-radius: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--medium-gray);
+  border-radius: 6px;
+  border: 2px solid var(--light-gray);
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: var(--text-gray);
+}
+
+/* Button size consistency */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  height: 32px;
+  min-width: 60px;
+}
+
+/* Prevent button text wrapping */
+.btn {
+  white-space: nowrap;
+}
+
+/* Sidebar toggle icon - always hamburger menu */
+.sidebar-toggle-btn i {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+/* Ensure main content doesn't jump when sidebar toggles */
+.main-content {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fix for collapsed sidebar user info */
+.sidebar.collapsed .user-details {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.2s ease;
+  position: absolute;
+  left: -9999px;
+}
+
+.sidebar.collapsed .user-info {
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.sidebar.collapsed .user-avatar {
+  margin-right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar.collapsed .user-avatar i {
+  font-size: 2.2rem;
+}
+
+/* Responsive button adjustments */
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .action-buttons .btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+/* Loading state for buttons */
+.btn.loading {
+  pointer-events: none;
+  opacity: 0.6;
+  position: relative;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}/* Addition
+al table and button visibility fixes */
+
+/* Fixed column widths for horizontal scrolling */
+.table th:nth-child(1), .table td:nth-child(1) { width: 250px; } /* Title */
+.table th:nth-child(2), .table td:nth-child(2) { width: 120px; } /* Status */
+.table th:nth-child(3), .table td:nth-child(3) { width: 100px; } /* Priority */
+.table th:nth-child(4), .table td:nth-child(4) { width: 130px; } /* Application */
+.table th:nth-child(5), .table td:nth-child(5) { width: 160px; } /* Assigned To */
+.table th:nth-child(6), .table td:nth-child(6) { width: 160px; } /* Reporter */
+.table th:nth-child(7), .table td:nth-child(7) { width: 140px; } /* Actions */
+
+/* Prevent text overflow in table cells */
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0;
+}
+
+.table td:last-child {
+  white-space: nowrap;
+  overflow: visible;
+}
+
+/* Ensure buttons are always clickable */
+.action-buttons .btn {
+  position: relative;
+  z-index: 1;
+}
+
+/* Table header styling */
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--light-gray);
+  z-index: 10;
+  border-bottom: 2px solid var(--medium-gray);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  padding: 12px 8px;
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 1200px) {
+  .main-content {
+    padding: 0;
+  }
+  
+  .page-content {
+    padding: 12px;
+  }
+  
+  .table {
+    font-size: 0.7rem;
+  }
+  
+  .table td, .table th {
+    font-size: 0.7rem;
+    padding: 5px 3px;
+  }
+  
+  .action-buttons .btn {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    min-width: 45px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 992px) {
+  .table th:nth-child(1), .table td:nth-child(1) { width: 25%; }
+  .table th:nth-child(2), .table td:nth-child(2) { width: 15%; }
+  .table th:nth-child(3), .table td:nth-child(3) { width: 12%; }
+  .table th:nth-child(4), .table td:nth-child(4) { width: 15%; }
+  .table th:nth-child(5), .table td:nth-child(5) { width: 15%; }
+  .table th:nth-child(6), .table td:nth-child(6) { width: 0%; display: none; } /* Hide Reporter on smaller screens */
+  .table th:nth-child(7), .table td:nth-child(7) { width: 18%; }
+}
+
+/* Sidebar width adjustments for better content visibility */
+@media (min-width: 1400px) {
+  :root {
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 70px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .page-content {
+    padding: 25px;
+  }
+  
+  .container {
+    max-width: none;
+  }
+}
+
+/* Fix for button hover states in table */
+.table .action-buttons .btn:hover {
+  transform: translateY(-1px);
+  z-index: 2;
+}
+
+/* Ensure table doesn't break layout */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0 -15px;
+  padding: 0 15px;
+}
+
+/* Better spacing for table content */
+.table td, .table th {
+  padding: 8px 10px;
+  vertical-align: middle;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Make table text readable */
+.table {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.table thead th {
+  font-size: 0.8rem;
+  padding: 12px 10px;
+  font-weight: 700;
+  background: var(--light-gray);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Status and priority badges styling */
+.table .badge {
+  font-size: 0.6rem;
+  padding: 2px 5px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+}/*
+ Additional compact table improvements */
+
+/* Allow full content display with horizontal scrolling */
+.table td:nth-child(1) { /* Title */
+  max-width: 250px;
+}
+
+.table td:nth-child(4) { /* Application */
+  max-width: 130px;
+}
+
+.table td:nth-child(5), /* Assigned To */
+.table td:nth-child(6) { /* Reporter */
+  max-width: 160px;
+}
+
+/* Compact table row height */
+.table tbody tr {
+  height: 40px;
+}
+
+/* Smaller page title to match table */
+.page-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+/* Compact container for better space usage */
+.container h1 {
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Better badge colors for status */
+.badge-info {
+  background-color: var(--light-blue);
+  color: white;
+}
+
+.badge-secondary {
+  background-color: var(--medium-gray);
+  color: var(--dark-gray);
+}
+
+/* Ensure buttons don't get too small on mobile */
+@media (max-width: 768px) {
+  .action-buttons .btn {
+    min-width: 40px;
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    height: 22px;
+  }
+  
+  .table {
+    font-size: 0.65rem;
+  }
+  
+  .table td, .table th {
+    font-size: 0.65rem;
+    padding: 4px 2px;
+  }
+}/* F
+orce horizontal scrolling for table */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+  background: white;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  margin-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Force table to be wider than container */
+.table-responsive .table {
+  width: 1200px !important;
+  min-width: 1200px !important;
+  margin-bottom: 0;
+  table-layout: fixed;
+}
+
+/* Fixed column widths to ensure horizontal scroll */
+.table-responsive .table th:nth-child(1), 
+.table-responsive .table td:nth-child(1) { width: 250px !important; } /* Title */
+.table-responsive .table th:nth-child(2), 
+.table-responsive .table td:nth-child(2) { width: 130px !important; } /* Status */
+.table-responsive .table th:nth-child(3), 
+.table-responsive .table td:nth-child(3) { width: 110px !important; } /* Priority */
+.table-responsive .table th:nth-child(4), 
+.table-responsive .table td:nth-child(4) { width: 150px !important; } /* Application */
+.table-responsive .table th:nth-child(5), 
+.table-responsive .table td:nth-child(5) { width: 180px !important; } /* Assigned To */
+.table-responsive .table th:nth-child(6), 
+.table-responsive .table td:nth-child(6) { width: 180px !important; } /* Reporter */
+.table-responsive .table th:nth-child(7), 
+.table-responsive .table td:nth-child(7) { width: 200px !important; } /* Actions */
+
+/* Custom horizontal scrollbar */
+.table-container::-webkit-scrollbar,
+.table-responsive::-webkit-scrollbar {
+  height: 12px;
+}
+
+.table-container::-webkit-scrollbar-track,
+.table-responsive::-webkit-scrollbar-track {
+  background: var(--light-gray);
+  border-radius: 6px;
+}
+
+.table-container::-webkit-scrollbar-thumb,
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--medium-gray);
+  border-radius: 6px;
+  border: 2px solid var(--light-gray);
+}
+
+.table-container::-webkit-scrollbar-thumb:hover,
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: var(--text-gray);
+}
+
+/* Ensure table cells don't wrap */
+.table-responsive .table td,
+.table-responsive .table th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+/* Make sure buttons are visible */
+.table-responsive .action-buttons {
+  min-width: 180px;
+  justify-content: space-around;
+}
+
+.table-responsive .action-buttons .btn {
+  min-width: 70px;
+  font-size: 0.8rem;
+}/
+* Additional fixes for collapsed sidebar icons */
+.sidebar.collapsed .nav-link {
+  background: none !important;
+}
+
+.sidebar.collapsed .nav-link .nav-icon {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.sidebar.collapsed .nav-link:hover .nav-icon {
+  background: none !important;
+}
+
+.sidebar.collapsed .nav-link.active .nav-icon {
+  background: none !important;
+  color: var(--accent-green) !important;
+}
+
+/* Center the sidebar footer content when collapsed */
+.sidebar.collapsed .sidebar-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 10px;
+}
+
+.sidebar.collapsed .sidebar-footer .user-info {
+  width: 100%;
+  justify-content: center;
 }

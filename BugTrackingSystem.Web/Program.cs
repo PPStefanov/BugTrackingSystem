@@ -23,8 +23,20 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
 })
-.AddEntityFrameworkStores<BugTrackingSystemDbContext>();
+.AddEntityFrameworkStores<BugTrackingSystemDbContext>()
+.AddDefaultUI()
+.AddDefaultTokenProviders();
+
+// Configure application cookie settings
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
 
 builder.Services.AddControllersWithViews(options =>
 {

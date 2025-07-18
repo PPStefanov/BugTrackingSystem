@@ -26,9 +26,14 @@
         [BindNever]
         public List<ApplicationName> Applications { get; set; } // For dropdown
 
-        public string AssignedToUserId { get; set; } // Optional field for assignment
+        public string AssignedToUserId { get; set; } // Optional field for QA assignment
         [BindNever]
         public List<AppUser> Users { get; set; } // For dropdown (if needed)
+
+        // Developer assignment (visible when status is "In Development")
+        public string? DeveloperId { get; set; }
+        [BindNever]
+        public List<AppUser> Developers { get; set; } // For developer dropdown
 
         [Required]
         public int StatusId { get; set; } // Foreign key for BugStatusEntity
@@ -36,6 +41,8 @@
         public List<BugStatusEntity> Statuses { get; set; } // For dropdown
 
         public bool CanEditStatus { get; set; } // Whether the user can edit the status
+        public bool ShowDeveloperDropdown { get; set; } // Show developer dropdown when status is "In Development"
+        public bool IsAdmin { get; set; } // Whether current user is admin (for subscription feature)
     }
 }
 

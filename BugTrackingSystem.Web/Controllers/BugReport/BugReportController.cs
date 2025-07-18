@@ -1,6 +1,7 @@
 using BugTrackingSystem.Models.Entities;
 using BugTrackingSystem.Models.Enums;
 using BugTrackingSystem.ViewModels.BugReport;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using BugReportEntity = BugTrackingSystem.Models.Entities.BugReport;
 
 namespace BugTrackingSystem.Web.Controllers.BugReport
 {
+    [Authorize]
     public class BugReportController : Controller
     {
         private readonly IBugReportService _bugReportService;
@@ -68,6 +70,7 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
             var applications = await _bugReportService.GetApplicationsAsync();
             var statuses = await _bugReportService.GetBugStatusesAsync();
             var users = await GetAssignableUsersAsync();
+            var developers = await GetDevelopersAsync();
 
             var user = await _userManager.GetUserAsync(User);
             var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
@@ -83,7 +86,10 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
                     Applications = applications,
                     Statuses = statuses,
                     Users = users,
-                    CanEditStatus = true
+                    Developers = developers,
+                    CanEditStatus = true,
+                    ShowDeveloperDropdown = false,
+                    IsAdmin = userRole == "Admin"
                 };
                 return View(viewModel);
             }
@@ -124,11 +130,16 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
                     ApplicationId = bugReport.ApplicationId,
                     StatusId = bugReport.StatusId,
                     AssignedToUserId = bugReport.AssignedToUserId,
+                    DeveloperId = bugReport.DeveloperId,
                     Priorities = priorities,
                     Applications = applications,
                     Statuses = allowedStatuses,
                     Users = users,
-                    CanEditStatus = canEditStatus
+                    Developers = developers,
+                    CanEditStatus = canEditStatus,
+                    ShowDeveloperDropdown = bugReport.Status?.Name == "In Development" || 
+                                          (userRole == "QA" && allowedStatuses.Any(s => s.Name == "In Development")),
+                    IsAdmin = userRole == "Admin"
                 };
                 return View(viewModel);
             }
@@ -196,6 +207,13 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
                 bugReport.ApplicationId = model.ApplicationId;
                 bugReport.StatusId = model.StatusId;
                 bugReport.AssignedToUserId = model.AssignedToUserId;
+                
+                // Handle developer assignment when status is "In Development"
+                var status = await _bugReportService.GetBugStatusByIdAsync(model.StatusId);
+                if (status?.Name == "In Development" && !string.IsNullOrEmpty(model.DeveloperId))
+                {
+                    bugReport.DeveloperId = model.DeveloperId;
+                }
 
                 await _bugReportService.UpdateAsync(bugReport, user);
 
@@ -248,6 +266,11 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
             }
 
             return new List<AppUser>();
+        }
+
+        private async Task<List<AppUser>> GetDevelopersAsync()
+        {
+            return (await _userManager.GetUsersInRoleAsync("Developer")).ToList();
         }
 
         private List<BugReportListViewModel> BuildBugReportListViewModel(

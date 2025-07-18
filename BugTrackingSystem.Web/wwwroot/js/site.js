@@ -47,16 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
         addRippleEffect(toggleBtn, e);
     });
 
-    // Update toggle button icon based on sidebar state
+    // Toggle button always shows hamburger menu - no icon switching needed
     function updateToggleIcon(isCollapsed) {
-        const icon = toggleBtn.querySelector('i');
-        if (icon) {
-            if (isCollapsed) {
-                icon.className = 'fas fa-bars';
-            } else {
-                icon.className = 'fas fa-times';
-            }
-        }
+        // Icon stays the same - always hamburger menu
+        // This function is kept for consistency but doesn't change the icon
     }
 
     // Add ripple effect to button

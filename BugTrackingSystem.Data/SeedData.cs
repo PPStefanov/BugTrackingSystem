@@ -29,10 +29,10 @@ namespace BugTrackingSystem.Data
             // Example: Seed one user per role if they don't exist
             var users = new[]
                     {
-                        new { Email = "admin@demo.com", Role = "Admin", Password = "SuperSecret1!" },
-                        new { Email = "qa@demo.com", Role = "QA", Password = "SuperSecret2!" },
-                        new { Email = "dev@demo.com", Role = "Developer", Password = "SuperSecret3!" },
-                        new { Email = "user@demo.com", Role = "User", Password = "SuperSecret4!" }
+                        new { Email = "admin@demo.com", Role = "Admin", Password = "123456" },
+                        new { Email = "qa@demo.com", Role = "QA", Password = "123456" },
+                        new { Email = "dev@demo.com", Role = "Developer", Password = "123456" },
+                        new { Email = "user@demo.com", Role = "User", Password = "123456" }
                     };
             foreach (var u in users)
             {
@@ -42,6 +42,13 @@ namespace BugTrackingSystem.Data
                     user = new AppUser { UserName = u.Email, Email = u.Email, EmailConfirmed = true };
                     await userManager.CreateAsync(user, u.Password);
                 }
+                else
+                {
+                    // Update existing user's password
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                    await userManager.ResetPasswordAsync(user, token, u.Password);
+                }
+                
                 if (!await userManager.IsInRoleAsync(user, u.Role))
                 {
                     await userManager.AddToRoleAsync(user, u.Role);

@@ -15,6 +15,8 @@ namespace BugTrackingSystem.Data
         public DbSet<BugReport> BugReports { get; set; }
         public DbSet<ApplicationName> ApplicationName { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<AdminSubscription> AdminSubscriptions { get; set; }
 
         public DbSet<BugPriorityEntity> BugPriorities { get; set; }
         public DbSet<BugStatusEntity> BugStatuses { get; set; }

@@ -43,6 +43,10 @@ namespace BugTrackingSystem.Models.Entities
         public string AssignedToUserId { get; set; }
         public AppUser AssignedToUser { get; set; }
 
+        // Developer assignment (when status is "In Development")
+        public string? DeveloperId { get; set; }
+        public AppUser? Developer { get; set; }
+
         public void ChangeStatus(int newStatusId, string role)
         {
             // Define valid transitions

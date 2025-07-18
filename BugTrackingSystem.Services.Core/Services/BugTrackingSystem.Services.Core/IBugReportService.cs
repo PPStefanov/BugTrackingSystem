@@ -23,7 +23,7 @@ public interface IBugReportService
     Task<List<BugPriorityEntity>> GetBugPrioritiesAsync();
     Task<List<ApplicationName>> GetApplicationsAsync();
     Task<List<BugStatusEntity>> GetBugStatusesAsync(); // New method
-
+    Task<BugStatusEntity?> GetBugStatusByIdAsync(int statusId); // Get status by ID
 
     Task<List<BugReport>> GetBugsByStatusAsync(string statusName);
 

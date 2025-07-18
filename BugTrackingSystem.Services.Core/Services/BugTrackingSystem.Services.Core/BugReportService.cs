@@ -192,6 +192,11 @@ public class BugReportService : IBugReportService
         return await _dbContext.BugStatuses.ToListAsync();
     }
 
+    public async Task<BugStatusEntity?> GetBugStatusByIdAsync(int statusId)
+    {
+        return await _dbContext.BugStatuses.FindAsync(statusId);
+    }
+
 
     //public async Task<List<BugReport>> GetBugsByStatusAsync(string statusName)
     //{
