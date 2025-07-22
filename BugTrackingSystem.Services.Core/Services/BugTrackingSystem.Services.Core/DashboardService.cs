@@ -15,7 +15,7 @@ namespace BugTrackingSystem.Services.Core
 
         public async Task<DashboardStatsViewModel> GetDashboardStatsAsync()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var weekAgo = now.AddDays(-7);
             var monthAgo = now.AddDays(-30);
 
@@ -134,7 +134,7 @@ namespace BugTrackingSystem.Services.Core
 
         public async Task<List<MonthlyStatsViewModel>> GetMonthlyStatsAsync(int months = 6)
         {
-            var startDate = DateTime.UtcNow.AddMonths(-months);
+            var startDate = DateTime.Now.AddMonths(-months);
             var monthlyStats = new List<MonthlyStatsViewModel>();
 
             for (int i = 0; i < months; i++)

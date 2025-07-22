@@ -5,7 +5,7 @@ namespace BugTrackingSystem.ViewModels.Reports
         public List<UserProductivityViewModel> UserStats { get; set; }
         public UserProductivitySummaryViewModel Summary { get; set; }
         public ReportFilterViewModel AppliedFilters { get; set; }
-        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+        public DateTime GeneratedAt { get; set; } = DateTime.Now;
     }
 
     public class UserProductivityViewModel

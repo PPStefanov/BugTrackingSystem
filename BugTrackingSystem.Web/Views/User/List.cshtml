@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BugTrackingSystem.ViewModels.ApplicationViewModel>
+﻿@model IEnumerable<BugTrackingSystem.ViewModels.UserViewModel>
 
 @{
     ViewData["Title"] = "Users";
@@ -20,9 +20,9 @@
             @foreach (var user in Model)
             {
                 <tr>
-                    <td>@user.Name</td>
-@*                     <td>@user.Email</td>
-                    <td>@user.Role</td> *@
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-warning">Edit</a>
                         <form asp-action="Delete" asp-route-id="@user.Id" method="post" style="display:inline;">

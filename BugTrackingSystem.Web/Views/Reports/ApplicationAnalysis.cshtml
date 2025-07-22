@@ -1,0 +1,266 @@
+@model BugTrackingSystem.ViewModels.Reports.ApplicationBugReportViewModel
+@{
+    ViewData["Title"] = "Application Analysis Report";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="text-primary mb-2">
+            <i class="fas fa-layer-group me-2"></i>Application Analysis Report
+        </h2>
+        <p class="text-muted">Comprehensive analysis of bug reports by application</p>
+    </div>
+    <div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Reports
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.TotalApplications</h4>
+                        <p class="card-text">Total Applications</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-layer-group fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.OverallResolutionRate.ToString("F1")%</h4>
+                        <p class="card-text">Overall Resolution Rate</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-percentage fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@(Model.Summary.MostBuggyApp?.TotalBugs ?? 0)</h4>
+                        <p class="card-text">Most Bugs</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@(Model.Summary.BestPerformingApp?.ResolutionRate.ToString("F1") ?? "0")%</h4>
+                        <p class="card-text">Best Performance</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-trophy fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Applications -->
+@if (Model.Summary.MostBuggyApp != null || Model.Summary.BestPerformingApp != null || Model.Summary.MostImprovedApp != null)
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-star me-2"></i>Notable Applications
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @if (Model.Summary.MostBuggyApp != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-bug fa-2x text-warning mb-2"></i>
+                                    <h6>Most Bug Reports</h6>
+                                    <p class="mb-1"><strong>@Model.Summary.MostBuggyApp.ApplicationName</strong></p>
+                                    <span class="badge bg-warning">@Model.Summary.MostBuggyApp.TotalBugs bugs</span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Summary.BestPerformingApp != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-trophy fa-2x text-success mb-2"></i>
+                                    <h6>Best Performance</h6>
+                                    <p class="mb-1"><strong>@Model.Summary.BestPerformingApp.ApplicationName</strong></p>
+                                    <span class="badge bg-success">@Model.Summary.BestPerformingApp.ResolutionRate.ToString("F1")% resolved</span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Summary.MostImprovedApp != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                                    <h6>Most Improved</h6>
+                                    <p class="mb-1"><strong>@Model.Summary.MostImprovedApp.ApplicationName</strong></p>
+                                    <span class="badge bg-info">@Model.Summary.MostImprovedApp.TrendPercentage.ToString("F1")% improvement</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Application Statistics Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-table me-2"></i>Application Statistics
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Application</th>
+                                <th>Total Bugs</th>
+                                <th>Open</th>
+                                <th>In Progress</th>
+                                <th>Resolved</th>
+                                <th>Closed</th>
+                                <th>Resolution Rate</th>
+                                <th>Avg Resolution Time</th>
+                                <th>Health Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.ApplicationStats)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@app.ApplicationName</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">@app.TotalBugs</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">@app.OpenBugs</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@app.InProgressBugs</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@app.ResolvedBugs</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">@app.ClosedBugs</span>
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px; width: 80px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: @app.ResolutionRate%"
+                                                 aria-valuenow="@app.ResolutionRate" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                @app.ResolutionRate.ToString("F1")%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (app.AverageResolutionDays > 0)
+                                        {
+                                            <span class="text-muted">@app.AverageResolutionDays.ToString("F1") days</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge" style="background-color: @app.HealthColor; color: white;">
+                                            @app.HealthStatus
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Info -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Report Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Report Period:</strong> 
+                            @(Model.AppliedFilters.StartDate?.ToString("MMM dd, yyyy") ?? "All time") - 
+                            @(Model.AppliedFilters.EndDate?.ToString("MMM dd, yyyy") ?? "Present")
+                        </p>
+                        <p><strong>Generated:</strong> @Model.GeneratedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Applications Analyzed:</strong> @Model.ApplicationStats.Count</p>
+                        <p><strong>Overall Resolution Rate:</strong> @Model.Summary.OverallResolutionRate.ToString("F1")%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .badge {
+        font-size: 0.75em;
+    }
+    
+    .progress {
+        background-color: #e9ecef;
+    }
+</style>

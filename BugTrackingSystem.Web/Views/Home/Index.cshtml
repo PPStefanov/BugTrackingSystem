@@ -68,7 +68,7 @@
 
     private string GetTimeAgo(DateTime timestamp)
     {
-        var timeSpan = DateTime.UtcNow - timestamp;
+        var timeSpan = DateTime.Now - timestamp;
         
         if (timeSpan.TotalMinutes < 1)
             return "just now";

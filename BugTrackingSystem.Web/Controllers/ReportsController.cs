@@ -23,8 +23,8 @@ namespace BugTrackingSystem.Web.Controllers
             var filterOptions = await _reportingService.GetFilterOptionsAsync();
             var defaultFilters = new ReportFilterViewModel
             {
-                StartDate = DateTime.UtcNow.AddDays(-30),
-                EndDate = DateTime.UtcNow,
+                StartDate = DateTime.Now.AddDays(-30),
+                EndDate = DateTime.Now,
                 ReportType = ReportType.Summary,
                 IncludeResolved = true,
                 IncludeClosed = true
@@ -89,7 +89,7 @@ namespace BugTrackingSystem.Web.Controllers
             try
             {
                 var pdfBytes = await _reportingService.ExportBugReportToPdfAsync(filters);
-                var fileName = $"BugReport_{DateTime.UtcNow:yyyyMMdd_HHmmss}.pdf";
+                var fileName = $"BugReport_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
                 return File(pdfBytes, "application/pdf", fileName);
             }
             catch (Exception ex)
@@ -105,7 +105,7 @@ namespace BugTrackingSystem.Web.Controllers
             try
             {
                 var excelBytes = await _reportingService.ExportBugReportToExcelAsync(filters);
-                var fileName = $"BugReport_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
+                var fileName = $"BugReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
                 return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
             catch (Exception ex)
@@ -120,8 +120,8 @@ namespace BugTrackingSystem.Web.Controllers
         {
             var filters = new ReportFilterViewModel
             {
-                StartDate = DateTime.UtcNow.AddDays(-30),
-                EndDate = DateTime.UtcNow,
+                StartDate = DateTime.Now.AddDays(-30),
+                EndDate = DateTime.Now,
                 IncludeResolved = true,
                 IncludeClosed = true
             };
@@ -129,16 +129,16 @@ namespace BugTrackingSystem.Web.Controllers
             switch (type?.ToLower())
             {
                 case "weekly":
-                    filters.StartDate = DateTime.UtcNow.AddDays(-7);
+                    filters.StartDate = DateTime.Now.AddDays(-7);
                     filters.ReportType = ReportType.Summary;
                     break;
                 case "monthly":
-                    filters.StartDate = DateTime.UtcNow.AddDays(-30);
+                    filters.StartDate = DateTime.Now.AddDays(-30);
                     filters.ReportType = ReportType.Summary;
                     break;
                 case "quarterly":
-                    filters.StartDate = DateTime.UtcNow.AddDays(-90);
-                    filters.ReportType = ReportType.TrendAnalysis;
+                    filters.StartDate = DateTime.Now.AddDays(-90);
+                    filters.ReportType = ReportType.Summary;
                     break;
                 case "users":
                     filters.ReportType = ReportType.UserProductivity;

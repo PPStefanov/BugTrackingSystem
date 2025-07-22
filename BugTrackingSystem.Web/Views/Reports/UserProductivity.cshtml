@@ -1,0 +1,273 @@
+@model BugTrackingSystem.ViewModels.Reports.UserProductivityReportViewModel
+@{
+    ViewData["Title"] = "User Productivity Report";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="text-primary mb-2">
+            <i class="fas fa-users me-2"></i>User Productivity Report
+        </h2>
+        <p class="text-muted">Analysis of user performance and productivity metrics</p>
+    </div>
+    <div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Reports
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.TotalUsers</h4>
+                        <p class="card-text">Total Users</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.ActiveUsers</h4>
+                        <p class="card-text">Active Users</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-user-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.AverageProductivityScore.ToString("F1")</h4>
+                        <p class="card-text">Avg Productivity</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@(Model.Summary.TopResolver?.BugsResolved ?? 0)</h4>
+                        <p class="card-text">Top Resolver</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-trophy fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Performers -->
+@if (Model.Summary.TopReporter != null || Model.Summary.TopResolver != null || Model.Summary.MostProductiveUser != null)
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-star me-2"></i>Top Performers
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @if (Model.Summary.TopReporter != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-bug fa-2x text-primary mb-2"></i>
+                                    <h6>Top Reporter</h6>
+                                    <p class="mb-1"><strong>@Model.Summary.TopReporter.UserName</strong></p>
+                                    <span class="badge bg-primary">@Model.Summary.TopReporter.BugsReported reports</span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Summary.TopResolver != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                    <h6>Top Resolver</h6>
+                                    <p class="mb-1"><strong>@Model.Summary.TopResolver.UserName</strong></p>
+                                    <span class="badge bg-success">@Model.Summary.TopResolver.BugsResolved resolved</span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Summary.MostProductiveUser != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-trophy fa-2x text-warning mb-2"></i>
+                                    <h6>Most Productive</h6>
+                                    <p class="mb-1"><strong>@Model.Summary.MostProductiveUser.UserName</strong></p>
+                                    <span class="badge bg-warning">@Model.Summary.MostProductiveUser.ProductivityScore.ToString("F1") score</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- User Statistics Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-table me-2"></i>User Statistics
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Reported</th>
+                                <th>Assigned</th>
+                                <th>Resolved</th>
+                                <th>Avg Resolution</th>
+                                <th>Productivity Score</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.UserStats)
+                            {
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <strong>@user.UserName</strong>
+                                            <br>
+                                            <small class="text-muted">@user.Email</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">@user.Role</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@user.BugsReported</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">@user.BugsAssigned</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@user.BugsResolved</span>
+                                    </td>
+                                    <td>
+                                        @if (user.AverageResolutionDays > 0)
+                                        {
+                                            <span class="text-muted">@user.AverageResolutionDays.ToString("F1") days</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress me-2" style="width: 60px; height: 20px;">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: @Math.Min(user.ProductivityScore / 10, 100)%"
+                                                     aria-valuenow="@user.ProductivityScore" 
+                                                     aria-valuemin="0" aria-valuemax="1000">
+                                                </div>
+                                            </div>
+                                            <small>@user.ProductivityScore.ToString("F0")</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (user.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Info -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Report Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Report Period:</strong> 
+                            @(Model.AppliedFilters.StartDate?.ToString("MMM dd, yyyy") ?? "All time") - 
+                            @(Model.AppliedFilters.EndDate?.ToString("MMM dd, yyyy") ?? "Present")
+                        </p>
+                        <p><strong>Generated:</strong> @Model.GeneratedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Total Users Analyzed:</strong> @Model.UserStats.Count</p>
+                        <p><strong>Active Users:</strong> @Model.UserStats.Count(u => u.IsActive)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .badge {
+        font-size: 0.75em;
+    }
+    
+    .progress {
+        background-color: #e9ecef;
+    }
+</style>

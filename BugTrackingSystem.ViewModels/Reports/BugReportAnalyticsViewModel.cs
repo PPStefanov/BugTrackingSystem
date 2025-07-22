@@ -11,7 +11,7 @@ namespace BugTrackingSystem.ViewModels.Reports
         public List<TrendDataViewModel> TrendData { get; set; }
         public List<AverageResolutionTimeViewModel> ResolutionTimes { get; set; }
         public ReportFilterViewModel AppliedFilters { get; set; }
-        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+        public DateTime GeneratedAt { get; set; } = DateTime.Now;
     }
 
     public class ReportSummaryViewModel

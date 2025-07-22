@@ -1,0 +1,312 @@
+@model BugTrackingSystem.ViewModels.Reports.BugReportAnalyticsViewModel
+@{
+    ViewData["Title"] = "Bug Report Analytics";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="text-primary mb-2">
+            <i class="fas fa-chart-line me-2"></i>Bug Report Analytics
+        </h2>
+        <p class="text-muted">Comprehensive analysis of your bug tracking data</p>
+    </div>
+    <div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Reports
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.TotalBugs</h4>
+                        <p class="card-text">Total Bugs</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-bug fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.OpenBugs</h4>
+                        <p class="card-text">Open Bugs</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.ClosedBugs</h4>
+                        <p class="card-text">Resolved Bugs</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">@Model.Summary.CriticalBugs</h4>
+                        <p class="card-text">Critical Bugs</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-fire fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Status Distribution -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Status Distribution
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Priority Distribution -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Priority Distribution
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="priorityChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Application Analysis -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-layer-group me-2"></i>Application Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Application</th>
+                                <th>Total Bugs</th>
+                                <th>Open</th>
+                                <th>Resolved</th>
+                                <th>Resolution Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.ApplicationDistribution)
+                            {
+                                <tr>
+                                    <td><strong>@app.Application</strong></td>
+                                    <td>
+                                        <span class="badge bg-primary">@app.TotalBugs</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">@app.OpenBugs</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@app.ResolvedBugs</span>
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: @app.ResolutionRate%"
+                                                 aria-valuenow="@app.ResolutionRate" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                @app.ResolutionRate.ToString("F1")%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Report Info -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Report Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Report Period:</strong> 
+                            @(Model.AppliedFilters.StartDate?.ToString("MMM dd, yyyy") ?? "All time") - 
+                            @(Model.AppliedFilters.EndDate?.ToString("MMM dd, yyyy") ?? "Present")
+                        </p>
+                        <p><strong>Generated:</strong> @Model.GeneratedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Resolution Rate:</strong> @Model.Summary.ResolutionRate.ToString("F1")%</p>
+                        <p><strong>Average Resolution Time:</strong> @Model.Summary.AverageResolutionDays.ToString("F1") days</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Status Distribution Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        
+        const statusLabels = [
+            @foreach (var status in Model.StatusDistribution)
+            {
+                <text>'@status.Status',</text>
+            }
+        ];
+        
+        const statusData = [
+            @foreach (var status in Model.StatusDistribution)
+            {
+                <text>@status.Count,</text>
+            }
+        ];
+        
+        const statusColors = [
+            @foreach (var status in Model.StatusDistribution)
+            {
+                <text>'@status.Color',</text>
+            }
+        ];
+        
+        const statusChart = new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: statusColors,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Priority Distribution Chart
+        const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+        
+        const priorityLabels = [
+            @foreach (var priority in Model.PriorityDistribution)
+            {
+                <text>'@priority.Priority',</text>
+            }
+        ];
+        
+        const priorityData = [
+            @foreach (var priority in Model.PriorityDistribution)
+            {
+                <text>@priority.Count,</text>
+            }
+        ];
+        
+        const priorityColors = [
+            @foreach (var priority in Model.PriorityDistribution)
+            {
+                <text>'@priority.Color',</text>
+            }
+        ];
+        
+        const priorityChart = new Chart(priorityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: priorityLabels,
+                datasets: [{
+                    data: priorityData,
+                    backgroundColor: priorityColors,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+
+    </script>
+}
+
+<style>
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    
+    .progress {
+        background-color: #e9ecef;
+    }
+    
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+    }
+</style>

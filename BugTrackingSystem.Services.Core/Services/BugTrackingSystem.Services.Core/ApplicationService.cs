@@ -42,7 +42,7 @@ namespace BugTrackingSystem.Services.Core
 
             // Set default values
             application.IsActive = true;
-            application.CreatedAt = DateTime.UtcNow;
+            application.CreatedAt = DateTime.Now;
             application.UpdatedAt = null;
 
             _context.ApplicationName.Add(application);
@@ -64,7 +64,7 @@ namespace BugTrackingSystem.Services.Core
             existingApp.Name = application.Name;
             existingApp.Description = application.Description;
             existingApp.IsActive = application.IsActive;
-            existingApp.UpdatedAt = DateTime.UtcNow;
+            existingApp.UpdatedAt = DateTime.Now;
 
             _context.ApplicationName.Update(existingApp);
             await _context.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace BugTrackingSystem.Services.Core
                 return false;
 
             application.IsActive = !application.IsActive;
-            application.UpdatedAt = DateTime.UtcNow;
+            application.UpdatedAt = DateTime.Now;
 
             _context.ApplicationName.Update(application);
             await _context.SaveChangesAsync();

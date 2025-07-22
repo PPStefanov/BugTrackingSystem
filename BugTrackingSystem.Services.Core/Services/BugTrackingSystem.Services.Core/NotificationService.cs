@@ -22,7 +22,7 @@ namespace BugTrackingSystem.Services.Core
                 Message = message,
                 Type = type,
                 BugReportId = bugReportId,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
                 IsRead = false
             };
 
@@ -153,7 +153,7 @@ namespace BugTrackingSystem.Services.Core
                 {
                     AdminId = adminId,
                     BugReportId = bugReportId,
-                    SubscribedAt = DateTime.UtcNow,
+                    SubscribedAt = DateTime.Now,
                     IsActive = true
                 };
 

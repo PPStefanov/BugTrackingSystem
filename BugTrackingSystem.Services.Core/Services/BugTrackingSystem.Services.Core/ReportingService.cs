@@ -83,7 +83,7 @@ namespace BugTrackingSystem.Services.Core
                 ApplicationDistribution = applicationDistribution,
                 TrendData = trendData,
                 AppliedFilters = filters,
-                GeneratedAt = DateTime.UtcNow
+                GeneratedAt = DateTime.Now
             };
         }
 
@@ -117,7 +117,7 @@ namespace BugTrackingSystem.Services.Core
                 DaysToResolve = b.Status.Name == "Closed" && b.UpdatedAt.HasValue ? 
                     (int)(b.UpdatedAt.Value - b.CreatedAt).TotalDays : 0,
                 CommentCount = b.Comments.Count,
-                IsOverdue = (DateTime.UtcNow - b.CreatedAt).TotalDays > 30 && b.Status.Name != "Closed",
+                IsOverdue = (DateTime.Now - b.CreatedAt).TotalDays > 30 && b.Status.Name != "Closed",
                 StatusColor = GetStatusColor(b.Status.Name),
                 PriorityColor = GetPriorityColor(b.Priority.Name)
             }).ToList();
@@ -160,7 +160,7 @@ namespace BugTrackingSystem.Services.Core
                     LastActivity = bugs.Where(b => b.ReporterId == user.Id || b.AssignedToUserId == user.Id)
                         .Max(b => b.UpdatedAt ?? b.CreatedAt),
                     IsActive = bugs.Any(b => (b.ReporterId == user.Id || b.AssignedToUserId == user.Id) && 
-                        (b.UpdatedAt ?? b.CreatedAt) > DateTime.UtcNow.AddDays(-30))
+                        (b.UpdatedAt ?? b.CreatedAt) > DateTime.Now.AddDays(-30))
                 });
             }
 
@@ -179,7 +179,7 @@ namespace BugTrackingSystem.Services.Core
                 UserStats = userStats.OrderByDescending(u => u.ProductivityScore).ToList(),
                 Summary = summary,
                 AppliedFilters = filters,
-                GeneratedAt = DateTime.UtcNow
+                GeneratedAt = DateTime.Now
             };
         }
 
@@ -195,8 +195,8 @@ namespace BugTrackingSystem.Services.Core
                 var appBugs = bugs.Where(b => b.ApplicationId == app.Id).ToList();
                 var resolvedBugs = appBugs.Where(b => b.Status.Name == "Closed").ToList();
                 
-                var thisMonth = DateTime.UtcNow.AddDays(-30);
-                var lastMonth = DateTime.UtcNow.AddDays(-60);
+                var thisMonth = DateTime.Now.AddDays(-30);
+                var lastMonth = DateTime.Now.AddDays(-60);
                 
                 var bugsThisMonth = appBugs.Count(b => b.CreatedAt >= thisMonth);
                 var bugsLastMonth = appBugs.Count(b => b.CreatedAt >= lastMonth && b.CreatedAt < thisMonth);
@@ -245,14 +245,14 @@ namespace BugTrackingSystem.Services.Core
                 ApplicationStats = appStats,
                 Summary = summary,
                 AppliedFilters = filters,
-                GeneratedAt = DateTime.UtcNow
+                GeneratedAt = DateTime.Now
             };
         }
 
         public async Task<TimeBasedReportViewModel> GetTimeBasedReportAsync(ReportFilterViewModel filters)
         {
-            var startDate = filters.StartDate ?? DateTime.UtcNow.AddDays(-30);
-            var endDate = filters.EndDate ?? DateTime.UtcNow;
+            var startDate = filters.StartDate ?? DateTime.Now.AddDays(-30);
+            var endDate = filters.EndDate ?? DateTime.Now;
 
             var timeSeriesData = new List<TimeSeriesDataViewModel>();
             var currentDate = startDate.Date;
@@ -329,7 +329,7 @@ namespace BugTrackingSystem.Services.Core
                 TimeSeriesData = timeSeriesData,
                 Summary = summary,
                 AppliedFilters = filters,
-                GeneratedAt = DateTime.UtcNow
+                GeneratedAt = DateTime.Now
             };
         }
 
@@ -461,8 +461,8 @@ namespace BugTrackingSystem.Services.Core
         // Helper methods
         private async Task<List<TrendDataViewModel>> GetTrendDataAsync(ReportFilterViewModel filters)
         {
-            var startDate = filters.StartDate ?? DateTime.UtcNow.AddDays(-30);
-            var endDate = filters.EndDate ?? DateTime.UtcNow;
+            var startDate = filters.StartDate ?? DateTime.Now.AddDays(-30);
+            var endDate = filters.EndDate ?? DateTime.Now;
             var trendData = new List<TrendDataViewModel>();
 
             var currentDate = startDate.Date;

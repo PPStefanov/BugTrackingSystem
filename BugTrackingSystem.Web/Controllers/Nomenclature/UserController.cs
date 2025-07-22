@@ -75,7 +75,7 @@ namespace BugTrackingSystem.Web.Controllers.Nomenclature
             {
                 if (!string.IsNullOrEmpty(model.Role))
                     await _userManager.AddToRoleAsync(user, model.Role);
-                return RedirectToAction("Index");
+                return RedirectToAction("List");
             }
 
             foreach (var error in result.Errors)
@@ -137,7 +137,7 @@ namespace BugTrackingSystem.Web.Controllers.Nomenclature
                 await _userManager.AddToRoleAsync(user, model.Role);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("List");
         }
 
         // Delete user
@@ -148,7 +148,7 @@ namespace BugTrackingSystem.Web.Controllers.Nomenclature
             if (user == null) return NotFound();
 
             await _userManager.DeleteAsync(user);
-            return RedirectToAction("Index");
+            return RedirectToAction("List");
         }
     }
 }

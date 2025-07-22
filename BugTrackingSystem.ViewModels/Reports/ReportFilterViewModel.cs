@@ -56,8 +56,7 @@ namespace BugTrackingSystem.ViewModels.Reports
         Detailed,
         UserProductivity,
         ApplicationAnalysis,
-        TimeBased,
-        TrendAnalysis
+        TimeBased
     }
 
     public enum GroupByOption

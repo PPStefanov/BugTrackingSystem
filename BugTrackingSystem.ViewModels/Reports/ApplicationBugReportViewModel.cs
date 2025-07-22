@@ -5,7 +5,7 @@ namespace BugTrackingSystem.ViewModels.Reports
         public List<ApplicationBugStatsViewModel> ApplicationStats { get; set; }
         public ApplicationSummaryViewModel Summary { get; set; }
         public ReportFilterViewModel AppliedFilters { get; set; }
-        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+        public DateTime GeneratedAt { get; set; } = DateTime.Now;
     }
 
     public class ApplicationBugStatsViewModel
