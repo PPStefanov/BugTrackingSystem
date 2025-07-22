@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BugTrackingSystem.Web.Controllers.Nomenclature
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

@@ -240,10 +240,13 @@
                     <button class="btn btn-warning" onclick="window.location.href='/Applications/List'">
                         <i class="fas fa-desktop me-2"></i>Manage Applications
                     </button>
-                    @if (User.IsInRole("Administrator"))
+                    @if (User.IsInRole("Admin"))
                     {
                         <button class="btn btn-info" onclick="window.location.href='/User/List'">
                             <i class="fas fa-users-cog me-2"></i>User Management
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.location.href='/Reports'">
+                            <i class="fas fa-chart-bar me-2"></i>Advanced Reports
                         </button>
                     }
                 </div>
