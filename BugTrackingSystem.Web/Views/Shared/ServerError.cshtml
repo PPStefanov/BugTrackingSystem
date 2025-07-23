@@ -1,112 +1,107 @@
 @{
     ViewData["Title"] = "Server Error";
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="error-page">
-    <div class="error-container">
+<div class="error-container">
+    <div class="error-content">
         <div class="error-icon">
-            <i class="fas fa-exclamation-triangle text-warning"></i>
+            <i class="fas fa-exclamation-triangle fa-5x"></i>
         </div>
-        <div class="error-content">
-            <h1 class="error-code">500</h1>
-            <h2 class="error-title">Internal Server Error</h2>
-            <p class="error-description">
-                Something went wrong on our end. We're working to fix this issue. Please try again later or contact support if the problem persists.
-            </p>
-            <div class="error-actions">
-                <a href="/" class="btn btn-primary">
-                    <i class="fas fa-home me-2"></i>Go to Dashboard
-                </a>
-                <button onclick="location.reload()" class="btn btn-warning">
-                    <i class="fas fa-redo me-2"></i>Try Again
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Support Information -->
-    <div class="support-info">
-        <h5>Need Help?</h5>
-        <div class="support-grid">
-            <div class="support-item">
-                <i class="fas fa-envelope text-primary"></i>
-                <div>
-                    <strong>Email Support</strong>
-                    <p>support@bugtracker.com</p>
-                </div>
-            </div>
-            <div class="support-item">
-                <i class="fas fa-phone text-success"></i>
-                <div>
-                    <strong>Phone Support</strong>
-                    <p>+1 (555) 123-4567</p>
-                </div>
-            </div>
-            <div class="support-item">
-                <i class="fas fa-clock text-info"></i>
-                <div>
-                    <strong>Support Hours</strong>
-                    <p>Mon-Fri 9AM-6PM EST</p>
-                </div>
-            </div>
-        </div>
+        <h1 class="error-title">500</h1>
+        <h2 class="error-subtitle">Internal Server Error</h2>
+        <p class="error-message">
+            Something went wrong on our end. We're working to fix this issue.
+        </p>
         
+        <div class="error-actions">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>
+                Go to Dashboard
+            </a>
+            <button onclick="location.reload()" class="btn btn-secondary">
+                <i class="fas fa-redo me-2"></i>
+                Try Again
+            </button>
+        </div>
+
         <div class="error-details">
             <details>
                 <summary>Technical Details</summary>
-                <div class="tech-info">
-                    <p><strong>Error ID:</strong> <code>@Guid.NewGuid().ToString("N")[..8]</code></p>
-                    <p><strong>Timestamp:</strong> @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss UTC")</p>
-                    <p><strong>User Agent:</strong> <code>@Context.Request.Headers["User-Agent"]</code></p>
-                    <p class="text-muted">Please include this information when contacting support.</p>
+                <div class="tech-details">
+                    <p><strong>Error Code:</strong> 500 - Internal Server Error</p>
+                    <p><strong>Time:</strong> @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                    <p><strong>What happened?</strong> The server encountered an unexpected condition that prevented it from fulfilling the request.</p>
+                    <p><strong>What can you do?</strong></p>
+                    <ul>
+                        <li>Try refreshing the page</li>
+                        <li>Go back to the previous page</li>
+                        <li>Contact support if the problem persists</li>
+                    </ul>
                 </div>
             </details>
+        </div>
+
+        <div class="error-help">
+            <h4>Need Help?</h4>
+            <div class="help-links">
+                <a href="@Url.Action("List", "BugReport")" class="help-link">
+                    <i class="fas fa-bug"></i>
+                    <span>View Bug Reports</span>
+                </a>
+                <a href="@Url.Action("Form", "BugReport")" class="help-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Report This Issue</span>
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="help-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="mailto:support@bugtracker.com" class="help-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Support</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-.error-page {
-    min-height: 70vh;
+.error-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    text-align: center;
+    align-items: center;
+    min-height: 70vh;
     padding: 2rem;
 }
 
-.error-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.error-content {
+    text-align: center;
     max-width: 600px;
-    margin-bottom: 3rem;
 }
 
 .error-icon {
-    font-size: 4rem;
+    color: #e53e3e;
     margin-bottom: 2rem;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
-.error-code {
+.error-title {
     font-size: 6rem;
     font-weight: 700;
-    color: var(--accent-orange);
+    color: #e53e3e;
     margin: 0;
     line-height: 1;
 }
 
-.error-title {
+.error-subtitle {
     font-size: 2rem;
-    font-weight: 600;
     color: var(--dark-gray);
     margin: 1rem 0;
+    font-weight: 600;
 }
 
-.error-description {
+.error-message {
     font-size: 1.1rem;
     color: var(--text-gray);
     margin-bottom: 2rem;
@@ -116,105 +111,102 @@
 .error-actions {
     display: flex;
     gap: 1rem;
-    flex-wrap: wrap;
     justify-content: center;
-}
-
-.support-info {
-    background: var(--white);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-light);
-    max-width: 600px;
-    width: 100%;
-    text-align: left;
-}
-
-.support-info h5 {
-    color: var(--dark-gray);
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-}
-
-.support-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.5rem;
     margin-bottom: 2rem;
-}
-
-.support-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    background: var(--light-gray);
-}
-
-.support-item i {
-    font-size: 1.5rem;
-    margin-top: 0.25rem;
-}
-
-.support-item strong {
-    display: block;
-    color: var(--dark-gray);
-    margin-bottom: 0.25rem;
-    font-size: 0.9rem;
-}
-
-.support-item p {
-    margin: 0;
-    color: var(--text-gray);
-    font-size: 0.85rem;
+    flex-wrap: wrap;
 }
 
 .error-details {
-    border-top: 1px solid var(--medium-gray);
-    padding-top: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: left;
 }
 
 .error-details summary {
     cursor: pointer;
+    color: var(--primary-blue);
     font-weight: 600;
-    color: var(--dark-gray);
-    padding: 0.5rem;
-    border-radius: var(--border-radius);
-    transition: background-color 0.3s ease;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-.error-details summary:hover {
-    background-color: var(--light-gray);
-}
-
-.tech-info {
+.tech-details {
+    background: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #e53e3e;
     margin-top: 1rem;
+}
+
+.tech-details p {
+    margin-bottom: 0.5rem;
+    color: var(--dark-gray);
+}
+
+.tech-details ul {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.tech-details li {
+    margin-bottom: 0.25rem;
+    color: var(--text-gray);
+}
+
+.error-help {
+    border-top: 1px solid var(--medium-gray);
+    padding-top: 2rem;
+}
+
+.error-help h4 {
+    color: var(--dark-gray);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.help-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.help-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     padding: 1rem;
     background: var(--light-gray);
-    border-radius: var(--border-radius);
-    font-size: 0.85rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--dark-gray);
+    transition: all 0.3s ease;
+    border: 1px solid var(--medium-gray);
 }
 
-.tech-info p {
-    margin: 0.5rem 0;
-}
-
-.tech-info code {
+.help-link:hover {
     background: var(--white);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
+    color: var(--primary-blue);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.help-link i {
+    font-size: 1.2rem;
+    color: var(--primary-blue);
+}
+
+.help-link span {
+    font-weight: 500;
 }
 
 @@media (max-width: 768px) {
-    .error-code {
+    .error-title {
         font-size: 4rem;
     }
     
-    .error-title {
+    .error-subtitle {
         font-size: 1.5rem;
     }
     
@@ -223,11 +215,7 @@
         align-items: center;
     }
     
-    .error-actions .btn {
-        width: 200px;
-    }
-    
-    .support-grid {
+    .help-links {
         grid-template-columns: 1fr;
     }
 }

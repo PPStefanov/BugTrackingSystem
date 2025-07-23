@@ -73,6 +73,20 @@ var app = builder.Build();
                 app.UseHsts();
             }
 
+            // Configure custom error pages
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            
+            // Add global exception handling
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "text/html";
+                    await context.Response.WriteAsync("An error occurred. Please try again later.");
+                });
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -1,80 +1,75 @@
 @{
     ViewData["Title"] = "Page Not Found";
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="error-page">
-    <div class="error-container">
+<div class="error-container">
+    <div class="error-content">
         <div class="error-icon">
-            <i class="fas fa-search text-primary"></i>
+            <i class="fas fa-search fa-5x"></i>
         </div>
-        <div class="error-content">
-            <h1 class="error-code">404</h1>
-            <h2 class="error-title">Page Not Found</h2>
-            <p class="error-description">
-                Oops! The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
-            </p>
-            <div class="error-actions">
-                <a href="/" class="btn btn-primary">
-                    <i class="fas fa-home me-2"></i>Go to Dashboard
+        <h1 class="error-title">404</h1>
+        <h2 class="error-subtitle">Page Not Found</h2>
+        <p class="error-message">
+            Sorry, the page you are looking for doesn't exist or has been moved.
+        </p>
+        
+        <div class="error-actions">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>
+                Go to Dashboard
+            </a>
+            <button onclick="history.back()" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                Go Back
+            </button>
+        </div>
+
+        <div class="error-help">
+            <h4>What can you do?</h4>
+            <div class="help-links">
+                <a href="@Url.Action("List", "BugReport")" class="help-link">
+                    <i class="fas fa-bug"></i>
+                    <span>View Bug Reports</span>
                 </a>
-                <button onclick="history.back()" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Go Back
-                </button>
+                <a href="@Url.Action("Form", "BugReport")" class="help-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Create New Bug</span>
+                </a>
+                <a href="/User/List" class="help-link">
+                    <i class="fas fa-users"></i>
+                    <span>User Management</span>
+                </a>
+                <a href="@Url.Action("Index", "Reports")" class="help-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>View Reports</span>
+                </a>
             </div>
-        </div>
-    </div>
-    
-    <!-- Helpful Links -->
-    <div class="helpful-links">
-        <h5>You might be looking for:</h5>
-        <div class="link-grid">
-            <a href="/BugReport/List" class="help-link">
-                <i class="fas fa-bug"></i>
-                <span>Bug Reports</span>
-            </a>
-            <a href="/BugReport/Form" class="help-link">
-                <i class="fas fa-plus-circle"></i>
-                <span>Report New Bug</span>
-            </a>
-            <a href="/Applications/List" class="help-link">
-                <i class="fas fa-desktop"></i>
-                <span>Applications</span>
-            </a>
-            <a href="/User/List" class="help-link">
-                <i class="fas fa-users"></i>
-                <span>User Management</span>
-            </a>
         </div>
     </div>
 </div>
 
 <style>
-.error-page {
-    min-height: 70vh;
+.error-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    text-align: center;
+    align-items: center;
+    min-height: 70vh;
     padding: 2rem;
 }
 
-.error-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.error-content {
+    text-align: center;
     max-width: 600px;
-    margin-bottom: 3rem;
 }
 
 .error-icon {
-    font-size: 4rem;
+    color: var(--text-gray);
     margin-bottom: 2rem;
     opacity: 0.7;
 }
 
-.error-code {
+.error-title {
     font-size: 6rem;
     font-weight: 700;
     color: var(--primary-blue);
@@ -82,14 +77,14 @@
     line-height: 1;
 }
 
-.error-title {
+.error-subtitle {
     font-size: 2rem;
-    font-weight: 600;
     color: var(--dark-gray);
     margin: 1rem 0;
+    font-weight: 600;
 }
 
-.error-description {
+.error-message {
     font-size: 1.1rem;
     color: var(--text-gray);
     margin-bottom: 2rem;
@@ -99,67 +94,66 @@
 .error-actions {
     display: flex;
     gap: 1rem;
-    flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
 }
 
-.helpful-links {
-    background: var(--white);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-light);
-    max-width: 500px;
-    width: 100%;
+.error-help {
+    border-top: 1px solid var(--medium-gray);
+    padding-top: 2rem;
 }
 
-.helpful-links h5 {
+.error-help h4 {
     color: var(--dark-gray);
     margin-bottom: 1.5rem;
-    font-weight: 600;
+    font-size: 1.2rem;
 }
 
-.link-grid {
+.help-links {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .help-link {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 0.75rem;
     padding: 1rem;
+    background: var(--light-gray);
+    border-radius: 8px;
     text-decoration: none;
-    color: var(--text-gray);
-    border-radius: var(--border-radius);
+    color: var(--dark-gray);
     transition: all 0.3s ease;
-    border: 2px solid var(--medium-gray);
+    border: 1px solid var(--medium-gray);
 }
 
 .help-link:hover {
+    background: var(--white);
     color: var(--primary-blue);
-    border-color: var(--primary-blue);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
     text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .help-link i {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--primary-blue);
 }
 
 .help-link span {
-    font-size: 0.9rem;
     font-weight: 500;
 }
 
 @@media (max-width: 768px) {
-    .error-code {
+    .error-title {
         font-size: 4rem;
     }
     
-    .error-title {
+    .error-subtitle {
         font-size: 1.5rem;
     }
     
@@ -168,8 +162,8 @@
         align-items: center;
     }
     
-    .error-actions .btn {
-        width: 200px;
+    .help-links {
+        grid-template-columns: 1fr;
     }
 }
 </style>

@@ -1459,6 +1459,41 @@ body {
   outline-offset: 2px;
 }
 
+/* Ensure only one navigation item is active at a time */
+.sidebar-nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--white) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  transform: translateX(2px) !important;
+}
+
+.sidebar-nav .nav-link.active::before {
+  height: 100% !important;
+  background: var(--accent-green) !important;
+}
+
+.sidebar-nav .nav-link.active .nav-icon {
+  background: var(--accent-green) !important;
+  color: var(--white) !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4) !important;
+}
+
+/* Remove active state from non-active links */
+.sidebar-nav .nav-link:not(.active) {
+  background: transparent !important;
+  transform: translateX(0) !important;
+}
+
+.sidebar-nav .nav-link:not(.active)::before {
+  height: 0 !important;
+}
+
+.sidebar-nav .nav-link:not(.active) .nav-icon {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+
 /* Loading State for Navigation */
 .nav-link.loading {
   pointer-events: none;
