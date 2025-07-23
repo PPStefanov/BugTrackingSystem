@@ -1165,19 +1165,20 @@ body {
 /* Action Buttons in Tables - Consistent Layout */
 .action-buttons {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
-  min-width: 130px;
+  min-width: 150px;
 }
 
 .action-buttons .btn {
   flex-shrink: 0;
-  min-width: 60px;
+  min-width: 70px;
   font-size: 0.8rem;
-  padding: 6px 12px;
-  height: 32px;
+  padding: 8px 12px;
+  height: 34px;
+  gap: 4px;
 }
 
 /* Ensure buttons don't move when sidebar collapses */
@@ -1186,7 +1187,76 @@ body {
 }
 
 .table .action-buttons {
-  min-width: 140px;
+  min-width: 160px;
+}
+
+/* Button icon spacing */
+.btn i {
+  margin-right: 4px;
+}
+
+.btn i:last-child {
+  margin-right: 0;
+  margin-left: 4px;
+}
+
+/* Ensure buttons have proper spacing for icons and text */
+.btn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Additional Button Styles */
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  height: 34px;
+  min-width: 70px;
+  gap: 4px;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #c53030, #e53e3e);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(229, 62, 62, 0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--medium-gray), var(--text-gray));
+  color: white;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, var(--text-gray), var(--medium-gray));
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(100, 116, 139, 0.3);
+}
+
+/* Fix for button links */
+.btn-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+}
+
+.btn-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+  background: none;
+  transform: none;
+  box-shadow: none;
 }
 }
 

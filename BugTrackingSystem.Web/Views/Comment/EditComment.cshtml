@@ -1,0 +1,41 @@
+@model BugTrackingSystem.ViewModels.Comment.EditCommentViewModel
+
+@{
+    ViewData["Title"] = "Edit Comment";
+}
+
+<div class="container">
+    <h2>Edit Comment</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Comment" asp-action="EditComment" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="BugReportId" />
+                <input type="hidden" asp-for="AuthorId" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <input type="hidden" asp-for="IsActive" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="Content" class="form-label">Comment</label>
+                    <textarea asp-for="Content" class="form-control" rows="4" placeholder="Enter your comment..."></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a asp-controller="BugReport" asp-action="Details" asp-route-id="@Model.BugReportId" class="btn btn-secondary ms-2">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

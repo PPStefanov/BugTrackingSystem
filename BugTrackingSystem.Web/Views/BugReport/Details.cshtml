@@ -23,7 +23,7 @@
                 <dd class="col-sm-9">@Model.Status?.Name</dd>
 
                 <dt class="col-sm-3">Priority</dt>
-                <dd class="col-sm-9">@Model.Priority.ToString()</dd>
+                <dd class="col-sm-9">@Model.Priority?.Name</dd>
 
                 <dt class="col-sm-3">Application</dt>
                 <dd class="col-sm-9">@Model.ApplicationName?.Name</dd>
@@ -57,15 +57,18 @@
                     </div>
                     @if (comment.AuthorId == currentUserId || isAdmin)
                     {
-                        <div>
-                            <a asp-action="EditComment" asp-route-id="@comment.Id" title="Edit" class="btn btn-link p-0">
-                                <span class="bi bi-pencil-square"></span> <!-- Bootstrap icon -->
+                        <div class="action-buttons">
+                            <a asp-controller="Comment" asp-action="EditComment" asp-route-id="@comment.Id" title="Edit" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
                             </a>
-                            <form asp-action="DeleteComment" asp-route-id="@comment.Id" method="post" style="display:inline;" onsubmit="return confirm('Delete this comment?');">
-                                <button type="submit" class="btn btn-link text-danger p-0" title="Delete">
-                                    <span class="bi bi-trash"></span> <!-- Bootstrap icon -->
-                                </button>
-                            </form>
+                            @if (isAdmin)
+                            {
+                                <form asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@comment.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this comment? This action cannot be undone.');">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            }
                         </div>
                     }
                 </li>
@@ -78,13 +81,25 @@
     }
 
     <h4>Add Comment</h4>
-    <form asp-action="AddComment" asp-controller="Details" method="post" class="mb-3">
+    <form asp-controller="Comment" asp-action="AddComment" method="post" class="mb-3">
         <input type="hidden" name="bugReportId" value="@Model.Id" />
         <div class="form-group">
-            <textarea name="content" class="form-control" rows="3" placeholder="Type your message here..."></textarea>
+            <textarea name="content" class="form-control" rows="3" placeholder="Type your message here..." required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+        <button type="submit" class="btn btn-primary mt-2">
+            <i class="fas fa-plus"></i> Add Comment
+        </button>
     </form>
 
-    <a asp-action="List" class="btn btn-secondary mt-3">Back to List</a>
+    <div class="mt-4">
+        <a asp-action="List" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        @if (isAdmin)
+        {
+            <a asp-action="Form" asp-route-id="@Model.Id" class="btn btn-primary ms-2">
+                <i class="fas fa-edit"></i> Edit Bug Report
+            </a>
+        }
+    </div>
 </div>

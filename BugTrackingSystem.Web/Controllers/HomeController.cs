@@ -20,6 +20,25 @@ namespace BugTrackingSystem.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Check if user is authenticated
+            if (!User.Identity.IsAuthenticated)
+            {
+                // Return a simple view model for guest users
+                var guestViewModel = new DashboardViewModel
+                {
+                    WelcomeMessage = "Welcome to the Bug Tracking System!",
+                    IsUserLoggedIn = false,
+                    Stats = null,
+                    RecentActivity = new List<RecentActivityViewModel>(),
+                    BugsByStatus = new Dictionary<string, int>(),
+                    BugsByPriority = new Dictionary<string, int>(),
+                    MonthlyStats = new List<MonthlyStatsViewModel>()
+                };
+                
+                return View(guestViewModel);
+            }
+
+            // Load dashboard data for authenticated users
             var dashboardStats = await _dashboardService.GetDashboardStatsAsync();
             var recentActivity = await _dashboardService.GetRecentActivityAsync(5);
             var bugsByStatus = await _dashboardService.GetBugsByStatusAsync();

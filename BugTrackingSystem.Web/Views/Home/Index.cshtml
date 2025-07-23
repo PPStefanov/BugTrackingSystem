@@ -86,9 +86,27 @@
 <!-- Welcome Section -->
 <div class="mb-4">
     <h2 class="text-primary mb-2">@Model.WelcomeMessage</h2>
-    <p class="text-muted">Monitor and manage your bug tracking system from this central dashboard.</p>
+    @if (Model.IsUserLoggedIn)
+    {
+        <p class="text-muted">Monitor and manage your bug tracking system from this central dashboard.</p>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h4><i class="fas fa-info-circle me-2"></i>Please login to use the application!</h4>
+            <p class="mb-3">You need to be logged in to access the bug tracking system features.</p>
+            <a href="/Identity/Account/Login" class="btn btn-primary me-2">
+                <i class="fas fa-sign-in-alt me-1"></i>Login
+            </a>
+            <a href="/Identity/Account/Register" class="btn btn-outline-primary">
+                <i class="fas fa-user-plus me-1"></i>Register
+            </a>
+        </div>
+    }
 </div>
 
+@if (Model.IsUserLoggedIn)
+{
 <!-- Dashboard Cards -->
 <div class="dashboard-cards">
     <div class="dashboard-card blue">
@@ -338,14 +356,13 @@
     </div>
 </div>
 
+}
+
+@if (Model.IsUserLoggedIn)
+{
 <script>
     function handleReportProblem() {
-        const isLoggedIn = @Model.IsUserLoggedIn.ToString().ToLower();
-        if (isLoggedIn) {
-            window.location.href = '/BugReport/Form';
-        } else {
-            window.location.href = '/Identity/Account/Login';
-        }
+        window.location.href = '/BugReport/Form';
     }
 
     // Add some interactive effects
@@ -373,3 +390,4 @@
         });
     });
 </script>
+}

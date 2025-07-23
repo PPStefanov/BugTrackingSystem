@@ -46,6 +46,7 @@ public class BugReportService : IBugReportService
         //return await _dbContext.BugReports.ToListAsync();
         return await _dbContext.BugReports
                     .Include(b => b.Status)
+                    .Include(b => b.Priority)
                     .Include(b => b.ApplicationName)
                     .Include(b => b.AssignedToUser)
                     .Include(b => b.Reporter)
@@ -62,6 +63,7 @@ public class BugReportService : IBugReportService
                 .Include(b => b.Priority)
                 .Include(b => b.ApplicationName)
                 .Include(b => b.AssignedToUser)
+                .Include(b => b.Reporter)
                 .ToListAsync();
         }
         else
@@ -69,9 +71,10 @@ public class BugReportService : IBugReportService
             return await _dbContext.BugReports
                 .Where(b => b.IsActive && b.AssignedToUserId == user.Id || b.ReporterId == user.Id)
                 .Include(b => b.Status)
-                //.Include(b => b.Priority)
+                .Include(b => b.Priority)
                 .Include(b => b.ApplicationName)
                 .Include(b => b.AssignedToUser)
+                .Include(b => b.Reporter)
                 .ToListAsync();
         }
     }
@@ -87,7 +90,7 @@ public class BugReportService : IBugReportService
     {
         return await _dbContext.BugReports
             .Include(b => b.Status)
-            //.Include(b => b.Priority)
+            .Include(b => b.Priority)
             .Include(b => b.ApplicationName)
             .Include(b => b.AssignedToUser)
             .Include(b => b.Reporter)
@@ -213,10 +216,10 @@ public class BugReportService : IBugReportService
     {
         return await _dbContext.BugReports
             .Include(b => b.Status)
-            //.Include(b => b.Priority)
+            .Include(b => b.Priority)
             .Include(b => b.ApplicationName)
             .Include(b => b.AssignedToUser)
-            .Include(b => b.Reporter) // <-- Add this line
+            .Include(b => b.Reporter)
             .Where(b => b.Status.Name == statusName && b.IsActive)
             .ToListAsync();
     }

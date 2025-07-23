@@ -283,9 +283,9 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
             {
                 Id = ticket.Id,
                 Title = ticket.Title,
-                Status = ticket.Status?.Name,
-                Priority = priorities.FirstOrDefault(p => p.Id == ticket.PriorityId)?.Name ?? "",
-                Application = ticket.ApplicationName?.Name,
+                Status = ticket.Status?.Name ?? "Unknown",
+                Priority = ticket.Priority?.Name ?? priorities.FirstOrDefault(p => p.Id == ticket.PriorityId)?.Name ?? "Unknown",
+                Application = ticket.ApplicationName?.Name ?? "Unknown",
                 AssignedTo = ticket.AssignedToUser?.UserName ?? "Unassigned",
                 Reporter = ticket.Reporter?.UserName ?? "Unknown",
                 CanEdit =
