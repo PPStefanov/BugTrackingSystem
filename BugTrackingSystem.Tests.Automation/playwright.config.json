@@ -1,0 +1,39 @@
+{
+  "use": {
+    "browserName": "chromium",
+    "headless": false,
+    "viewport": { "width": 1280, "height": 720 },
+    "ignoreHTTPSErrors": true,
+    "screenshot": "only-on-failure",
+    "video": "retain-on-failure",
+    "trace": "retain-on-failure"
+  },
+  "projects": [
+    {
+      "name": "chromium",
+      "use": { "browserName": "chromium" }
+    },
+    {
+      "name": "firefox",
+      "use": { "browserName": "firefox" }
+    },
+    {
+      "name": "webkit",
+      "use": { "browserName": "webkit" }
+    }
+  ],
+  "testDir": "./Tests",
+  "timeout": 30000,
+  "expect": {
+    "timeout": 5000
+  },
+  "fullyParallel": true,
+  "forbidOnly": true,
+  "retries": 2,
+  "workers": 4,
+  "reporter": [
+    ["html"],
+    ["junit", { "outputFile": "test-results.xml" }]
+  ],
+  "outputDir": "test-results/"
+}
