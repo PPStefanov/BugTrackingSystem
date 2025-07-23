@@ -22,7 +22,7 @@ This project contains end-to-end automation tests for the Bug Tracking System us
 
 2. **Update test configuration:**
    - Open `BaseTest.cs`
-   - Update `BaseUrl` to match your application URL
+   - Update `BaseUrl` to match your application URL (currently set to https://localhost:44384)
    - Update test user credentials if different
 
 3. **Ensure test data:**
