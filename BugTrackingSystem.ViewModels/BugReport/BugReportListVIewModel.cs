@@ -12,10 +12,11 @@
             public string Priority { get; set; }
             public string Application { get; set; }
             public string AssignedTo { get; set; }
-            public string Reporter { get; set; } // Add this
-
-            public bool CanEdit { get; set; } // Add this property
-
+            public string Reporter { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public DateTime? LastEditDate { get; set; }
+            public string LastEditUser { get; set; } = string.Empty;
+            public bool CanEdit { get; set; }
         }
 
 }

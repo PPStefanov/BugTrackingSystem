@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 using BugReportEntity = BugTrackingSystem.Models.Entities.BugReport;
@@ -25,36 +26,57 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
             _emailSender = emailSender;
         }
 
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(BugReportFilterViewModel filters)
         {
             var user = await _userManager.GetUserAsync(User);
             var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
             var userId = user.Id;
             var priorities = await _bugReportService.GetBugPrioritiesAsync();
 
-            List<BugReportEntity> tickets;
-
+            // Get all tickets based on user role
+            List<BugReportEntity> allTickets;
             if (userRole == "Admin" || userRole == "QA")
             {
-                tickets = (await _bugReportService.GetAllBugsAsync())
+                allTickets = (await _bugReportService.GetAllBugsAsync())
                     .Where(t => t.Status?.Name != "Closed")
                     .ToList();
             }
             else if (userRole == "Developer")
             {
-                tickets = (await _bugReportService.GetBugsByStatusAsync("In Development"))
+                allTickets = (await _bugReportService.GetBugsByStatusAsync("In Development"))
                     .Where(t => t.Status?.Name != "Closed")
                     .ToList();
             }
             else
             {
-                tickets = (await _bugReportService.GetBugsForUserAsync(user))
+                allTickets = (await _bugReportService.GetBugsForUserAsync(user))
                     .Where(t => t.Status?.Name != "Closed")
                     .ToList();
             }
 
-            var viewModel = BuildBugReportListViewModel(tickets, priorities, userRole, userId);
-            return View(viewModel);
+            // Apply filters
+            var filteredTickets = ApplyFilters(allTickets, filters);
+
+            // Apply sorting
+            filteredTickets = ApplySorting(filteredTickets, filters.SortBy, filters.SortOrder);
+
+            // Build ViewModels
+            var bugReportViewModels = BuildBugReportListViewModel(filteredTickets, priorities, userRole, userId);
+            
+            // Prepare filter options
+            await PopulateFilterOptions(filters, allTickets);
+
+            // Create page ViewModel
+            var pageViewModel = new BugReportListPageViewModel
+            {
+                BugReports = bugReportViewModels,
+                Filters = filters,
+                TotalCount = allTickets.Count,
+                FilteredCount = filteredTickets.Count,
+                HasFiltersApplied = HasFiltersApplied(filters)
+            };
+
+            return View(pageViewModel);
         }
 
         [HttpGet]
@@ -288,12 +310,176 @@ namespace BugTrackingSystem.Web.Controllers.BugReport
                 Application = ticket.ApplicationName?.Name ?? "Unknown",
                 AssignedTo = ticket.AssignedToUser?.UserName ?? "Unassigned",
                 Reporter = ticket.Reporter?.UserName ?? "Unknown",
+                CreatedDate = ticket.CreatedAt,
+                LastEditDate = ticket.UpdatedAt,
+                LastEditUser = ticket.UpdatedAt.HasValue ? "System" : string.Empty,
                 CanEdit =
                     userRole == "Admin" ||
                     (userRole == "User" && ticket.ReporterId == userId && ticket.Status?.Name == "New") ||
                     (userRole == "QA" && ticket.Status?.Name != "In Development") ||
                     (userRole == "Developer" && ticket.Status?.Name == "In Development")
             }).ToList();
+        }
+
+        private List<BugReportEntity> ApplyFilters(List<BugReportEntity> tickets, BugReportFilterViewModel filters)
+        {
+            var filteredTickets = tickets.AsEnumerable();
+
+            // Search term filter
+            if (!string.IsNullOrWhiteSpace(filters.SearchTerm))
+            {
+                var searchTerm = filters.SearchTerm.ToLower();
+                filteredTickets = filteredTickets.Where(t => 
+                    t.Title.ToLower().Contains(searchTerm) ||
+                    t.Description.ToLower().Contains(searchTerm) ||
+                    (t.Reporter?.Email?.ToLower().Contains(searchTerm) ?? false) ||
+                    (t.AssignedToUser?.Email?.ToLower().Contains(searchTerm) ?? false));
+            }
+
+            // Status filter
+            if (!string.IsNullOrWhiteSpace(filters.StatusFilter))
+            {
+                filteredTickets = filteredTickets.Where(t => t.Status?.Name == filters.StatusFilter);
+            }
+
+            // Priority filter
+            if (!string.IsNullOrWhiteSpace(filters.PriorityFilter))
+            {
+                filteredTickets = filteredTickets.Where(t => t.Priority?.Name == filters.PriorityFilter);
+            }
+
+            // Application filter
+            if (!string.IsNullOrWhiteSpace(filters.ApplicationFilter))
+            {
+                filteredTickets = filteredTickets.Where(t => t.ApplicationName?.Name == filters.ApplicationFilter);
+            }
+
+            // Assigned To filter
+            if (!string.IsNullOrWhiteSpace(filters.AssignedToFilter))
+            {
+                filteredTickets = filteredTickets.Where(t => t.AssignedToUser?.Email == filters.AssignedToFilter);
+            }
+
+            // Reporter filter
+            if (!string.IsNullOrWhiteSpace(filters.ReporterFilter))
+            {
+                filteredTickets = filteredTickets.Where(t => t.Reporter?.Email == filters.ReporterFilter);
+            }
+
+            // Date range filter
+            if (filters.DateFrom.HasValue)
+            {
+                filteredTickets = filteredTickets.Where(t => t.CreatedAt >= filters.DateFrom.Value);
+            }
+
+            if (filters.DateTo.HasValue)
+            {
+                var dateTo = filters.DateTo.Value.AddDays(1); // Include the entire day
+                filteredTickets = filteredTickets.Where(t => t.CreatedAt < dateTo);
+            }
+
+            return filteredTickets.ToList();
+        }
+
+        private List<BugReportEntity> ApplySorting(List<BugReportEntity> tickets, string sortBy, string sortOrder)
+        {
+            var sortedTickets = tickets.AsEnumerable();
+            var isDescending = sortOrder?.ToLower() == "desc";
+
+            sortedTickets = sortBy?.ToLower() switch
+            {
+                "title" => isDescending ? sortedTickets.OrderByDescending(t => t.Title) : sortedTickets.OrderBy(t => t.Title),
+                "status" => isDescending ? sortedTickets.OrderByDescending(t => t.Status?.Name ?? "") : sortedTickets.OrderBy(t => t.Status?.Name ?? ""),
+                "priority" => isDescending ? sortedTickets.OrderByDescending(t => t.Priority?.Name ?? "") : sortedTickets.OrderBy(t => t.Priority?.Name ?? ""),
+                "application" => isDescending ? sortedTickets.OrderByDescending(t => t.ApplicationName?.Name ?? "") : sortedTickets.OrderBy(t => t.ApplicationName?.Name ?? ""),
+                "assignedto" => isDescending ? sortedTickets.OrderByDescending(t => t.AssignedToUser?.Email ?? "") : sortedTickets.OrderBy(t => t.AssignedToUser?.Email ?? ""),
+                "reporter" => isDescending ? sortedTickets.OrderByDescending(t => t.Reporter?.Email ?? "") : sortedTickets.OrderBy(t => t.Reporter?.Email ?? ""),
+                "lastedit" => isDescending ? sortedTickets.OrderByDescending(t => t.UpdatedAt ?? DateTime.MinValue) : sortedTickets.OrderBy(t => t.UpdatedAt ?? DateTime.MinValue),
+                "createddate" or _ => isDescending ? sortedTickets.OrderByDescending(t => t.CreatedAt) : sortedTickets.OrderBy(t => t.CreatedAt)
+            };
+
+            return sortedTickets.ToList();
+        }
+
+        private async Task PopulateFilterOptions(BugReportFilterViewModel filters, List<BugReportEntity> allTickets)
+        {
+            // Status options
+            var statuses = await _bugReportService.GetBugStatusesAsync();
+            filters.StatusOptions = statuses.Select(s => new SelectListItem
+            {
+                Value = s.Name,
+                Text = s.Name,
+                Selected = s.Name == filters.StatusFilter
+            }).Prepend(new SelectListItem { Value = "", Text = "All Statuses" });
+
+            // Priority options
+            var priorities = await _bugReportService.GetBugPrioritiesAsync();
+            filters.PriorityOptions = priorities.Select(p => new SelectListItem
+            {
+                Value = p.Name,
+                Text = p.Name,
+                Selected = p.Name == filters.PriorityFilter
+            }).Prepend(new SelectListItem { Value = "", Text = "All Priorities" });
+
+            // Application options
+            var applications = await _bugReportService.GetApplicationsAsync();
+            filters.ApplicationOptions = applications.Select(a => new SelectListItem
+            {
+                Value = a.Name,
+                Text = a.Name,
+                Selected = a.Name == filters.ApplicationFilter
+            }).Prepend(new SelectListItem { Value = "", Text = "All Applications" });
+
+            // Assigned To options
+            var assignedToUsers = allTickets
+                .Where(t => t.AssignedToUser != null)
+                .Select(t => t.AssignedToUser.Email)
+                .Distinct()
+                .OrderBy(email => email);
+            filters.AssignedToOptions = assignedToUsers.Select(email => new SelectListItem
+            {
+                Value = email,
+                Text = email,
+                Selected = email == filters.AssignedToFilter
+            }).Prepend(new SelectListItem { Value = "", Text = "All Assigned Users" });
+
+            // Reporter options
+            var reporters = allTickets
+                .Where(t => t.Reporter != null)
+                .Select(t => t.Reporter.Email)
+                .Distinct()
+                .OrderBy(email => email);
+            filters.ReporterOptions = reporters.Select(email => new SelectListItem
+            {
+                Value = email,
+                Text = email,
+                Selected = email == filters.ReporterFilter
+            }).Prepend(new SelectListItem { Value = "", Text = "All Reporters" });
+
+            // Sort By options
+            filters.SortByOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "createddate", Text = "Created Date", Selected = filters.SortBy == "createddate" },
+                new SelectListItem { Value = "lastedit", Text = "Last Edit Date", Selected = filters.SortBy == "lastedit" },
+                new SelectListItem { Value = "title", Text = "Title", Selected = filters.SortBy == "title" },
+                new SelectListItem { Value = "status", Text = "Status", Selected = filters.SortBy == "status" },
+                new SelectListItem { Value = "priority", Text = "Priority", Selected = filters.SortBy == "priority" },
+                new SelectListItem { Value = "application", Text = "Application", Selected = filters.SortBy == "application" },
+                new SelectListItem { Value = "assignedto", Text = "Assigned To", Selected = filters.SortBy == "assignedto" },
+                new SelectListItem { Value = "reporter", Text = "Reporter", Selected = filters.SortBy == "reporter" }
+            };
+        }
+
+        private bool HasFiltersApplied(BugReportFilterViewModel filters)
+        {
+            return !string.IsNullOrWhiteSpace(filters.SearchTerm) ||
+                   !string.IsNullOrWhiteSpace(filters.StatusFilter) ||
+                   !string.IsNullOrWhiteSpace(filters.PriorityFilter) ||
+                   !string.IsNullOrWhiteSpace(filters.ApplicationFilter) ||
+                   !string.IsNullOrWhiteSpace(filters.AssignedToFilter) ||
+                   !string.IsNullOrWhiteSpace(filters.ReporterFilter) ||
+                   filters.DateFrom.HasValue ||
+                   filters.DateTo.HasValue;
         }
 
         private List<BugStatusEntity> GetAllowedStatusTransitions(BugStatusEntity currentStatus, List<BugStatusEntity> allStatuses)
