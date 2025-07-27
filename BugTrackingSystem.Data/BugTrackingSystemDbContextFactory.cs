@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace BugTrackingSystem.Data
 {
@@ -7,10 +8,16 @@ namespace BugTrackingSystem.Data
     {
         public BugTrackingSystemDbContext CreateDbContext(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../BugTrackingSystem.Web"))
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddJsonFile("appsettings.Development.json", optional: true)
+                .Build();
+
             var optionsBuilder = new DbContextOptionsBuilder<BugTrackingSystemDbContext>();
-            // Replace with your actual connection string for design time
-            //optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=BugTrackingSystem_072025;Trusted_Connection=True;MultipleActiveResultSets=true;encrypt=false");   HOME
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BugTrackingSystem_072025;Trusted_Connection=True;MultipleActiveResultSets=true;encrypt=false"); // WORK
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new BugTrackingSystemDbContext(optionsBuilder.Options);
         }
