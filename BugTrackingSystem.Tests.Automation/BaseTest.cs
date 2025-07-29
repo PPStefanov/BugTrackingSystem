@@ -9,7 +9,7 @@ public class BaseTest : PageTest
 {
     protected static readonly string BaseUrl = Environment.GetEnvironmentVariable("TEST_BASE_URL") ?? "https://localhost:44384";
     protected const string AdminEmail = "admin@demo.com";
-    protected const string AdminPassword = "Admin123!";
+    protected const string AdminPassword = "123456";
     protected const string UserEmail = "qa@demo.com";
     protected const string UserPassword = "Qa123!";
 
