@@ -13,7 +13,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
         var commentText = $"Test comment {DateTime.Now:yyyyMMddHHmmss}";
 
         // Act
@@ -32,7 +32,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Act
         await Page.ClickAsync("button:has-text('Add Comment')");
@@ -48,7 +48,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
         
         // First add a comment
         var commentText = $"Test comment for editing {DateTime.Now:yyyyMMddHHmmss}";
@@ -57,7 +57,7 @@ public class CommentTests : BaseTest
         await Page.WaitForSelectorAsync(".comment-item");
 
         // Act & Assert
-        var editButton = await Page.IsVisibleAsync("a:has-text('Edit'):first");
+        var editButton = await Page.IsVisibleAsync("a:has-text('Edit')");
         editButton.Should().BeTrue();
     }
 
@@ -67,7 +67,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
         
         // First add a comment
         var originalComment = $"Original comment {DateTime.Now:yyyyMMddHHmmss}";
@@ -76,7 +76,7 @@ public class CommentTests : BaseTest
         await Page.WaitForSelectorAsync(".comment-item");
 
         // Act
-        await Page.ClickAsync("a:has-text('Edit'):first");
+        await Page.Locator("a:has-text('Edit')").First.ClickAsync();
         var updatedComment = $"Updated comment {DateTime.Now:yyyyMMddHHmmss}";
         await Page.FillAsync("textarea[name='Content']", updatedComment);
         await Page.ClickAsync("button:has-text('Update Comment')");
@@ -93,7 +93,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
         
         // First add a comment
         var commentText = $"Test comment for deletion {DateTime.Now:yyyyMMddHHmmss}";
@@ -102,7 +102,7 @@ public class CommentTests : BaseTest
         await Page.WaitForSelectorAsync(".comment-item");
 
         // Act & Assert
-        var deleteButton = await Page.IsVisibleAsync("button:has-text('Delete'):first");
+        var deleteButton = await Page.IsVisibleAsync("button:has-text('Delete')");
         deleteButton.Should().BeTrue();
     }
 
@@ -112,7 +112,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
         
         // First add a comment
         var commentText = $"Test comment for deletion {DateTime.Now:yyyyMMddHHmmss}";
@@ -122,7 +122,7 @@ public class CommentTests : BaseTest
 
         // Act
         Page.Dialog += (_, dialog) => dialog.AcceptAsync();
-        await Page.ClickAsync("button:has-text('Delete'):first");
+        await Page.Locator("button:has-text('Delete')").First.ClickAsync();
 
         // Assert
         await Page.WaitForTimeoutAsync(1000);
@@ -139,7 +139,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsAdmin();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Act & Assert
         var commentsExist = await Page.IsVisibleAsync(".comment-item");
@@ -159,7 +159,7 @@ public class CommentTests : BaseTest
         // Arrange
         await LoginAsUser();
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Act & Assert
         var commentsExist = await Page.IsVisibleAsync(".comment-item");

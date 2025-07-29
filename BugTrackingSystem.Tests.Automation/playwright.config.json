@@ -6,20 +6,20 @@
     "ignoreHTTPSErrors": true,
     "screenshot": "only-on-failure",
     "video": "retain-on-failure",
-    "trace": "retain-on-failure"
+    "trace": "retain-on-failure",
+    "slowMo": 500,
+    "launchOptions": {
+      "slowMo": 500,
+      "devtools": false
+    }
   },
   "projects": [
     {
       "name": "chromium",
-      "use": { "browserName": "chromium" }
-    },
-    {
-      "name": "firefox",
-      "use": { "browserName": "firefox" }
-    },
-    {
-      "name": "webkit",
-      "use": { "browserName": "webkit" }
+      "use": { 
+        "browserName": "chromium",
+        "channel": "chrome"
+      }
     }
   ],
   "testDir": "./Tests",
@@ -27,10 +27,10 @@
   "expect": {
     "timeout": 5000
   },
-  "fullyParallel": true,
+  "fullyParallel": false,
   "forbidOnly": true,
-  "retries": 2,
-  "workers": 4,
+  "retries": 1,
+  "workers": 1,
   "reporter": [
     ["html"],
     ["junit", { "outputFile": "test-results.xml" }]

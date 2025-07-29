@@ -38,7 +38,7 @@ public class BugReportTests : BaseTest
         await Page.FillAsync("textarea[name='Description']", "This is a test bug description");
         await Page.SelectOptionAsync("select[name='PriorityId']", new[] { "1" }); // Assuming 1 is a valid priority ID
         await Page.SelectOptionAsync("select[name='ApplicationId']", new[] { "1" }); // Assuming 1 is a valid app ID
-        await Page.ClickAsync("button[type='submit']");
+        await Page.Locator("button[type='submit']").Last.ClickAsync(); // Use Last to avoid the dropdown submit button
 
         // Assert
         await Page.WaitForURLAsync("**/BugReport/List**");
@@ -54,7 +54,7 @@ public class BugReportTests : BaseTest
 
         // Act
         await Page.ClickAsync("a:has-text('New Bug')");
-        await Page.ClickAsync("button[type='submit']");
+        await Page.Locator("button[type='submit']").Last.ClickAsync(); // Use Last to avoid the dropdown submit button
 
         // Assert
         var titleError = await Page.IsVisibleAsync("span[data-valmsg-for='Title']");
@@ -86,7 +86,7 @@ public class BugReportTests : BaseTest
         }
 
         // Act
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Assert
         await Page.WaitForURLAsync("**/BugReport/Details/**", new PageWaitForURLOptions { Timeout = 15000 });
@@ -111,7 +111,7 @@ public class BugReportTests : BaseTest
         await Page.ClickAsync("a:has-text('Bug Reports')");
 
         // Act
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Assert
         var editButton = await Page.IsVisibleAsync("a:has-text('Edit Bug Report')");
@@ -126,7 +126,7 @@ public class BugReportTests : BaseTest
         await Page.ClickAsync("a:has-text('Bug Reports')");
 
         // Act
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Assert
         var editButton = await Page.IsVisibleAsync("a:has-text('Edit Bug Report')");

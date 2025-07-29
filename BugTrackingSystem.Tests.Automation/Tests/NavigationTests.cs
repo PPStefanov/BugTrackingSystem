@@ -104,7 +104,7 @@ public class NavigationTests : BaseTest
 
         // Act
         await Page.ClickAsync("a:has-text('Bug Reports')");
-        await Page.ClickAsync("a:has-text('View'):first");
+        await Page.Locator("a:has-text('View')").First.ClickAsync();
 
         // Assert
         var breadcrumb = await Page.IsVisibleAsync(".breadcrumb");

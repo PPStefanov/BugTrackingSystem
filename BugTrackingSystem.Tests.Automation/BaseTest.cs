@@ -7,11 +7,27 @@ namespace BugTrackingSystem.Tests.Automation;
 [TestFixture]
 public class BaseTest : PageTest
 {
+    public override BrowserNewContextOptions ContextOptions()
+    {
+        return new BrowserNewContextOptions()
+        {
+            ViewportSize = new ViewportSize() { Width = 1280, Height = 720 },
+            IgnoreHTTPSErrors = true
+        };
+    }
+
+    [OneTimeSetUp]
+    public void GlobalSetup()
+    {
+        // Force headed mode by setting environment variable
+        Environment.SetEnvironmentVariable("HEADED", "1");
+    }
+
     protected static readonly string BaseUrl = Environment.GetEnvironmentVariable("TEST_BASE_URL") ?? "https://localhost:44384";
     protected const string AdminEmail = "admin@demo.com";
     protected const string AdminPassword = "123456";
     protected const string UserEmail = "qa@demo.com";
-    protected const string UserPassword = "Qa123!";
+    protected const string UserPassword = "123456";
 
     [SetUp]
     public async Task Setup()
@@ -19,11 +35,14 @@ public class BaseTest : PageTest
         // Set longer timeout for slower operations
         Page.SetDefaultTimeout(60000); // Increased to 60 seconds
         
+        // Make browser actions slower for better visibility
+        Page.SetDefaultNavigationTimeout(30000);
+        
         // Navigate to the application and wait for it to load
         await Page.GotoAsync(BaseUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
         
         // Wait a bit for any JavaScript to initialize
-        await Page.WaitForTimeoutAsync(1000);
+        await Page.WaitForTimeoutAsync(2000); // Increased wait time for better visibility
     }
 
     protected async Task LoginAsAdmin()

@@ -20,7 +20,7 @@ public class AuthenticationTests : BaseTest
 
         // Assert
         await Page.WaitForURLAsync($"{BaseUrl}/");
-        var welcomeText = await Page.TextContentAsync(".user-greeting");
+        var welcomeText = await Page.TextContentAsync(".dropdown-toggle");
         welcomeText.Should().Contain("Hello qa@demo.com!");
     }
 
